@@ -45,6 +45,9 @@ export default async ({ req, res, log, error }) => {
     //Array for all of the links
     let articleLinks = [];
 
+    //Timestamp for the last update
+    let timestamp = 0;
+
     //Launch puppeteer
     const browser = await puppeteer.launch({
         headless: true, 
@@ -74,16 +77,45 @@ export default async ({ req, res, log, error }) => {
         }, articlePaths[i].class, articlePaths[i].exclude, new URL(articlePaths[i].link).hostname);
 
         articleLinks.push(...linksLoad);
+        timestamp = Date.now();
       }
     }
 
     //Close the browser
     await browser.close();
 
-    //Create a new document
+    //Defining the collection of the article links for the past 6 hours
+    let articleLinksCollection = databases.listDocuments(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+      process.env.NEXT_PUBLIC_APPWRITE_ARTICLE_LINKS_COLLECTION,
+      [
+        Query.greaterThanEqual('ArticleLinkDate', timestamp-21600)
+      ]
+    );
 
+    //Iterate through all the new links
+    for (let i = 0; i < articleLinks.length; i++) {
+      //Checking if the link is already in the collection
+      if (!articleLinksCollection.includes(articleLinks[i])) {
+        //Creating a new document
+        const promise = databases.createDocument(
+          process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+          process.env.NEXT_PUBLIC_APPWRITE_ARTICLE_LINKS_COLLECTION,
+          ID.unique(),
+          {
+            ArticleLink: articleLinks[i],
+            ArticleLinkDate: timestamp
+          }
+        );
 
-
+        //Logging the response
+        promise.then(function (response) {
+          console.log(response);
+        }, function (error) {
+            console.log(error);
+        });
+      }
+    }
   } catch(err) {
     error("Could not list users: " + err.message);
   }
