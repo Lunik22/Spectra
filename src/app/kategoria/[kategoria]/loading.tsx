@@ -4,8 +4,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 export default function loading() {
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <Stack sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
       <CircularProgress color="primary" />
-    </div>
+    </Stack>
   );
 }

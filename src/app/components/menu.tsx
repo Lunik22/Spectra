@@ -39,42 +39,42 @@ export default function menu() {
                 Hlavne Správy
               </Typography>
             </Link>
-            <Link href="/pre-teba" passHref>
+            <Link href="/kategoria/pre-teba" passHref>
               <Typography variant="h2">
                 Pre Teba
               </Typography>
             </Link>
-            <Link href="/slovensko" passHref>
+            <Link href="/kategoria/slovensko" passHref>
               <Typography variant="h2"  sx={{ ":hover": `color: ${theme.palette.background.default}`}}>
                 Slovensko
               </Typography>
             </Link>
-            <Link href="/svet" passHref>
+            <Link href="/kategoria/svet" passHref>
               <Typography variant="h2">
                 Svet
               </Typography>
             </Link>
-            <Link href="/politika-a-ekonomika" passHref>
+            <Link href="/kategoria/politika-a-ekonomika" passHref>
               <Typography variant="h2">
                 Politika a Ekonomika
               </Typography>
             </Link>
-            <Link href="/technologie-a-veda" passHref>
+            <Link href="/kategoria/technologie-a-veda" passHref>
               <Typography variant="h2">
                 Technológie a Veda
               </Typography>
             </Link>
-            <Link href="/sport" passHref>
+            <Link href="/kategoria/sport" passHref>
               <Typography variant="h2">
                 Šport
               </Typography>
             </Link>
-            <Link href="/kultura-a-zabava" passHref>
+            <Link href="/kategoria/kultura-a-zabava" passHref>
               <Typography variant="h2">
                 Kultúra a Zábava
               </Typography>
             </Link>
-            <Link href="/miestne-spravy" passHref>
+            <Link href="/kategoria/miestne-spravy" passHref>
               <Typography variant="h2">
                 Miestne Správy
               </Typography>
