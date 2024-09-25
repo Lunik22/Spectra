@@ -1,4 +1,4 @@
-import { Client, Users, sdk } from 'node-appwrite';
+import { Client } from 'node-appwrite';
 import puppeteer from 'puppeteer';
 
 // This Appwrite function will be executed every time your function is triggered
