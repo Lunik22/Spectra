@@ -55,7 +55,7 @@ export default function navbar() {
         display:'flex', 
         boxShadow: 'none', 
         marginBottom: '0rem', 
-        backdropFilter: 'blur(20px)', 
+        backdropFilter: 'blur(30px)', 
         '&::before': {
             content: '""',
             position: 'absolute',
@@ -63,8 +63,9 @@ export default function navbar() {
             left: 0,
             right: 0,
             bottom: 0,
-            opacity: 0.9, // Set the opacity here
+            opacity: 0.75, // Set the opacity here
             zIndex: -1,
+            backgroundColor: theme.palette.primary.darker,
           },
         }} color='transparent'>
         <Toolbar sx={{ justifyContent: 'center'}}>

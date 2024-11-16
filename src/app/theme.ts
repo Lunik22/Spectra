@@ -48,6 +48,7 @@ const defaultTheme = createTheme({
       fontFamily: ['Montserrat', 'sans-serif'].join(','),
       h1: {
         fontWeight: 900,
+        fontSize: '2rem',
       },
       h2: {
         fontWeight: 700,
@@ -55,7 +56,7 @@ const defaultTheme = createTheme({
       },
       h3: {
         fontWeight: 500,
-        fontSize: '1rem',
+        fontSize: '1.25rem',
       },
       body1: {
         fontWeight: 400,
@@ -252,6 +253,7 @@ const sportTheme = createTheme({
     fontFamily: ['Montserrat', 'sans-serif'].join(','),
     h1: {
       fontWeight: 900,
+      fontSize: '2rem',
     },
     h2: {
       fontWeight: 700,
