@@ -2,6 +2,7 @@
 import React from 'react';
 import { AppBar, Box, Button, InputBase, Toolbar, Typography } from '@mui/material';
 import { styled, alpha, useTheme } from '@mui/material/styles';
+import { defaultTheme, slovakiaTheme, worldTheme, economicsTheme, techTheme, sportTheme, cultureTheme, localTheme } from '../app/theme';
 import Link from 'next/link';
 
 export default function menu() {
@@ -35,47 +36,128 @@ export default function menu() {
             },
           }}>
             <Link href="/" passHref>
-              <Typography variant="h2">
+              <Typography 
+                variant="h2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: defaultTheme.palette.text.secondary,
+                    transition: 'color 0.3s',
+                  }
+                }}>
                 Hlavne Správy
               </Typography>
             </Link>
             <Link href="/kategoria/pre-teba" passHref>
-              <Typography variant="h2">
+              <Typography 
+                variant="h2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: defaultTheme.palette.text.secondary,
+                    transition: 'color 0.3s',
+                  }
+                }}>
                 Pre Teba
               </Typography>
             </Link>
             <Link href="/kategoria/slovensko" passHref>
-              <Typography variant="h2"  sx={{ ":hover": `color: ${theme.palette.background.default}`}}>
+              <Typography 
+                variant="h2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: slovakiaTheme.palette.text.secondary,
+                    transition: 'color 0.3s',
+                  }
+                }}>
                 Slovensko
               </Typography>
             </Link>
             <Link href="/kategoria/svet" passHref>
-              <Typography variant="h2">
+              <Typography 
+                variant="h2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: worldTheme.palette.text.secondary,
+                    transition: 'color 0.3s',
+                  }
+                }}>
                 Svet
               </Typography>
             </Link>
             <Link href="/kategoria/politika-a-ekonomika" passHref>
-              <Typography variant="h2">
+              <Typography 
+                variant="h2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: economicsTheme.palette.text.secondary,
+                    transition: 'color 0.3s',
+                  }
+                }}>
                 Politika a Ekonomika
               </Typography>
             </Link>
             <Link href="/kategoria/technologie-a-veda" passHref>
-              <Typography variant="h2">
+              <Typography 
+                variant="h2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: techTheme.palette.text.secondary,
+                    transition: 'color 0.3s',
+                  }
+                }}>
                 Technológie a Veda
               </Typography>
             </Link>
             <Link href="/kategoria/sport" passHref>
-              <Typography variant="h2">
+              <Typography 
+                variant="h2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: sportTheme.palette.text.secondary,
+                    transition: 'color 0.3s',
+                  }
+                }}>
                 Šport
               </Typography>
             </Link>
             <Link href="/kategoria/kultura-a-zabava" passHref>
-              <Typography variant="h2">
+              <Typography 
+                variant="h2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: cultureTheme.palette.text.secondary,
+                    transition: 'color 0.3s',
+                  }
+                }}>
                 Kultúra a Zábava
               </Typography>
             </Link>
             <Link href="/kategoria/miestne-spravy" passHref>
-              <Typography variant="h2">
+              <Typography 
+                variant="h2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: localTheme.palette.text.secondary,
+                    transition: 'color 0.3s',
+                  }
+                }}>
                 Miestne Správy
               </Typography>
             </Link>

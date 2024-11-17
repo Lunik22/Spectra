@@ -57,17 +57,45 @@ export default function ArticleCardLg({ title, image, date, sourceLink }: Articl
       <Box sx={{ display: 'flex', padding:'1rem', width:'50%', flexDirection: 'column', background: `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`}}>
         <CardContent sx={{ flex: '1 0 auto'}}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
-            <Typography component="div" variant="h3">
+            <Typography 
+              component="div" 
+              variant="h3"
+              sx={{
+                color: 'text.primary',
+                WebkitTapHighlightColor: 'primary.main',
+                '&::selection': {
+                  backgroundColor: theme.palette.text.primary,
+                  color: theme.palette.primary.dark,
+                },
+              }}>
               {sources[source]["name"]}
             </Typography>
-            <Typography component="div" variant="h3">
+            <Typography 
+              component="div" 
+              variant="h3"
+              sx={{
+                color: 'text.primary',
+                WebkitTapHighlightColor: 'primary.main',
+                '&::selection': {
+                  backgroundColor: theme.palette.text.primary,
+                  color: theme.palette.primary.dark,
+                },
+              }}>
               {date}
             </Typography>
           </Box>
           <Typography
             variant="h1"
             component="div"
-            sx={{ color: 'text.primary', padding: '1rem 0 1rem 0'}}
+            sx={{
+              color: 'text.primary',
+              padding: '1rem 0 1rem 0',
+              WebkitTapHighlightColor: 'primary.main',
+              '&::selection': {
+                backgroundColor: theme.palette.text.primary,
+                color: theme.palette.primary.dark,
+              },
+            }}
           >
             {title}
           </Typography>

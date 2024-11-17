@@ -12,8 +12,8 @@ import { Client, Databases, Query } from "appwrite";
 
 const client = new Client();
 client
-  .setEndpoint('https://cloud.appwrite.io/v1') 
-  .setProject('66df301b002bf5d08c1e') 
+  .setEndpoint(String(process.env.NEXT_PUBLIC_APPWRITE_URL)) 
+  .setProject(String(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID)) 
 
 const databases = new Databases(client);
 
@@ -22,8 +22,8 @@ export default async function Home() {
   let timestamp = Math.floor(Date.now() / 1000);
   try {
     articles = await databases.listDocuments(
-      '66e992ad00337f2887d0',
-      '66e992d00033deaab869',
+      String(process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID),
+      String(process.env.NEXT_PUBLIC_APPWRITE_ARTICLES_COLLECTION),
       [
         Query.greaterThanEqual('ArticleDate', timestamp - 21600)
       ]

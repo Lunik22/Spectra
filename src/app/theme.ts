@@ -4,6 +4,7 @@ import localFont from 'next/font/local';
 import { Montserrat } from 'next/font/google';
 
 
+
 declare module '@mui/material/styles' {
   interface Theme {
     custom: {
@@ -47,8 +48,8 @@ const defaultTheme = createTheme({
   typography: {
       fontFamily: ['Montserrat', 'sans-serif'].join(','),
       h1: {
-        fontWeight: 900,
-        fontSize: '2rem',
+        fontWeight: 700,
+        fontSize: '1.75rem',
       },
       h2: {
         fontWeight: 700,
@@ -56,7 +57,7 @@ const defaultTheme = createTheme({
       },
       h3: {
         fontWeight: 500,
-        fontSize: '1.25rem',
+        fontSize: '1.15rem',
       },
       body1: {
         fontWeight: 400,
@@ -329,7 +330,7 @@ const localTheme = createTheme({
     },
     text: {
       primary: "#FFF9E5",
-      secondary: "#FFE8E5",
+      secondary: "#FF8B80",
     },
   },
   typography: {

@@ -55,7 +55,7 @@ export default function navbar() {
         display:'flex', 
         boxShadow: 'none', 
         marginBottom: '0rem', 
-        backdropFilter: 'blur(30px)', 
+        backdropFilter: 'blur(30px)',
         '&::before': {
             content: '""',
             position: 'absolute',
