@@ -30,7 +30,7 @@ export default function menu() {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundImage: `linear-gradient(to right, ${theme.palette.primary.dark}, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                backgroundImage: `linear-gradient(to right, ${theme.palette.primary.left || theme.palette.primary.dark}, ${theme.palette.primary.main}, ${theme.palette.primary.right || theme.palette.primary.dark})`,
                 opacity: 0.75, // Set the opacity here
                 zIndex: -1,
             },

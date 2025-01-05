@@ -20,10 +20,14 @@ declare module '@mui/material/styles' {
 
   interface PaletteColor {
     darker?: string;
+    left?: string;
+    right?: string;
   }
   
   interface SimplePaletteColorOptions {
     darker?: string;
+    left?: string;
+    right?: string;
   }
 }
   
@@ -35,6 +39,8 @@ const defaultTheme = createTheme({
       light: '#DF80FF',
       darker: "#0A010D",
       contrastText: "#F9E5FF",
+      left: '#800D50',
+      right: '#160D80',
     },
     background:{
       default: "#0A010D",
@@ -88,20 +94,21 @@ const slovakiaTheme = createTheme({
   },
   typography: {
     fontFamily: ['Montserrat', 'sans-serif'].join(','),
-    h1: {
-      fontWeight: 900,
-    },
-    h2: {
-      fontWeight: 700,
-      fontSize: '1rem',
-    },
-    h3: {
-      fontWeight: 500,
-      fontSize: '1rem',
-    },
-    body1: {
-      fontWeight: 300,
-    }
+      h1: {
+        fontWeight: 700,
+        fontSize: '1.75rem',
+      },
+      h2: {
+        fontWeight: 700,
+        fontSize: '1rem',
+      },
+      h3: {
+        fontWeight: 500,
+        fontSize: '1.15rem',
+      },
+      body1: {
+        fontWeight: 400,
+      }
   },
   custom: {
     logoPath: '/imgs/slovensko/SpectraLogo-slovensko.svg',
@@ -129,20 +136,21 @@ const worldTheme = createTheme({
   },
   typography: {
     fontFamily: ['Montserrat', 'sans-serif'].join(','),
-    h1: {
-      fontWeight: 900,
-    },
-    h2: {
-      fontWeight: 700,
-      fontSize: '1rem',
-    },
-    h3: {
-      fontWeight: 500,
-      fontSize: '1rem',
-    },
-    body1: {
-      fontWeight: 300,
-    }
+      h1: {
+        fontWeight: 700,
+        fontSize: '1.75rem',
+      },
+      h2: {
+        fontWeight: 700,
+        fontSize: '1rem',
+      },
+      h3: {
+        fontWeight: 500,
+        fontSize: '1.15rem',
+      },
+      body1: {
+        fontWeight: 400,
+      }
   },
   custom: {
     logoPath: '/imgs/svet/SpectraLogo-svet.svg',
