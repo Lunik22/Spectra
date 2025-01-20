@@ -25,7 +25,7 @@ export default async function Home() {
       String(process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID),
       String(process.env.NEXT_PUBLIC_APPWRITE_ARTICLES_COLLECTION),
       [
-        Query.greaterThanEqual('ArticleDate', timestamp - 21600)
+        Query.greaterThanEqual('ArticleDate', timestamp - 43200)
       ]
     );
     console.log("Articles successfully retrieved: ", articles);

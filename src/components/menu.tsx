@@ -21,8 +21,8 @@ export default function menu() {
             width: 'calc(100% + 100%)', 
             marginLeft: '-2%',
             marginRight: '-2%',
-            backdropFilter: 'blur(10px)', // Apply blur effect
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow
+            backdropFilter: 'blur(10px)', 
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             '&::before': {
                 content: '""',
                 position: 'absolute',
@@ -31,7 +31,7 @@ export default function menu() {
                 right: 0,
                 bottom: 0,
                 backgroundImage: `linear-gradient(to right, ${theme.palette.primary.left || theme.palette.primary.dark}, ${theme.palette.primary.main}, ${theme.palette.primary.right || theme.palette.primary.dark})`,
-                opacity: 0.75, // Set the opacity here
+                opacity: 0.75, 
                 zIndex: -1,
             },
           }}>
