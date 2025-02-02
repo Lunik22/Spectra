@@ -31,7 +31,7 @@ export default function menu() {
                 right: 0,
                 bottom: 0,
                 backgroundImage: `linear-gradient(to right, ${theme.palette.primary.left || theme.palette.primary.dark}, ${theme.palette.primary.main}, ${theme.palette.primary.right || theme.palette.primary.dark})`,
-                opacity: 0.75, 
+                opacity: 0.8, 
                 zIndex: -1,
             },
           }}>
@@ -42,7 +42,7 @@ export default function menu() {
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
                   '&:hover': {
-                    color: defaultTheme.palette.text.secondary,
+                    color: defaultTheme.palette.primary.main,
                     transition: 'color 0.3s',
                   }
                 }}>
@@ -56,7 +56,7 @@ export default function menu() {
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
                   '&:hover': {
-                    color: defaultTheme.palette.text.secondary,
+                    color: defaultTheme.palette.primary.main,
                     transition: 'color 0.3s',
                   }
                 }}>
@@ -70,7 +70,7 @@ export default function menu() {
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
                   '&:hover': {
-                    color: slovakiaTheme.palette.text.secondary,
+                    color: slovakiaTheme.palette.primary.main,
                     transition: 'color 0.3s',
                   }
                 }}>
@@ -84,25 +84,25 @@ export default function menu() {
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
                   '&:hover': {
-                    color: worldTheme.palette.text.secondary,
+                    color: worldTheme.palette.primary.main,
                     transition: 'color 0.3s',
                   }
                 }}>
                 Svet
               </Typography>
             </Link>
-            <Link href="/kategoria/politika-a-ekonomika" passHref>
+            <Link href="/kategoria/ekonomika" passHref>
               <Typography 
                 variant="h2"
                 sx={{
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
                   '&:hover': {
-                    color: economicsTheme.palette.text.secondary,
+                    color: economicsTheme.palette.primary.main,
                     transition: 'color 0.3s',
                   }
                 }}>
-                Politika a Ekonomika
+                Ekonomika
               </Typography>
             </Link>
             <Link href="/kategoria/technologie-a-veda" passHref>
@@ -112,7 +112,7 @@ export default function menu() {
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
                   '&:hover': {
-                    color: techTheme.palette.text.secondary,
+                    color: techTheme.palette.primary.main,
                     transition: 'color 0.3s',
                   }
                 }}>
@@ -126,25 +126,11 @@ export default function menu() {
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
                   '&:hover': {
-                    color: sportTheme.palette.text.secondary,
+                    color: sportTheme.palette.primary.main,
                     transition: 'color 0.3s',
                   }
                 }}>
                 Šport
-              </Typography>
-            </Link>
-            <Link href="/kategoria/kultura-a-zabava" passHref>
-              <Typography 
-                variant="h2"
-                sx={{
-                  color: theme.palette.text.primary,
-                  transition: 'color 0.3s',
-                  '&:hover': {
-                    color: cultureTheme.palette.text.secondary,
-                    transition: 'color 0.3s',
-                  }
-                }}>
-                Kultúra a Zábava
               </Typography>
             </Link>
             <Link href="/kategoria/miestne-spravy" passHref>
@@ -154,11 +140,25 @@ export default function menu() {
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
                   '&:hover': {
-                    color: localTheme.palette.text.secondary,
+                    color: localTheme.palette.primary.main,
                     transition: 'color 0.3s',
                   }
                 }}>
                 Miestne Správy
+              </Typography>
+            </Link>
+            <Link href="/kategoria/kultura-a-zabava" passHref>
+              <Typography 
+                variant="h2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: cultureTheme.palette.primary.main,
+                    transition: 'color 0.3s',
+                  }
+                }}>
+                Kultúra a Zábava
               </Typography>
             </Link>
 

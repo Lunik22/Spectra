@@ -39,7 +39,7 @@ const defaultTheme = createTheme({
       light: '#DF80FF',
       darker: "#0A010D",
       contrastText: "#F9E5FF",
-      left: '#800D50',
+      left: '#FF1A9F',
       right: '#160D80',
     },
     background:{
@@ -206,14 +206,14 @@ const techTheme = createTheme({
       dark: "#0D8063",
       light: "#80FFDF",
       darker: "#010D0A",
-      contrastText: "#E5F4FF",
+      contrastText: "#E5FFF9",
     },
     background:{
         default: "#010D0A",
         paper: "#010D0A",
     },
     text: {
-      primary: "#E5F4FF",
+      primary: "#E5FFF9",
       secondary: "#80FFDF",
     },
   },
@@ -282,7 +282,7 @@ const sportTheme = createTheme({
   
 });
 
-const cultureTheme = createTheme({
+const localTheme = createTheme({
   palette: {
     primary: {
       main: "#FFC61A",
@@ -318,12 +318,12 @@ const cultureTheme = createTheme({
     }
   },
   custom: {
-    logoPath: '/imgs/kultura-a-zabava/SpectraLogo-kultura-a-zabava.svg',
+    logoPath: '/imgs/miestne-spravy/SpectraLogo-miestne-spravy.svg',
   },
   
 });
 
-const localTheme = createTheme({
+const cultureTheme = createTheme({
   palette: {
     primary: {
       main: "#FF2D1A",
@@ -359,7 +359,7 @@ const localTheme = createTheme({
     }
   },
   custom: {
-    logoPath: '/imgs/miestne-spravy/SpectraLogo-miestne-spravy.svg',
+    logoPath: '/imgs/kultura-a-zabava/SpectraLogo-kultura-a-zabava.svg',
   },
   
 });

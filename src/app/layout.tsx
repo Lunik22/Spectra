@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
-  const theme = pathname.startsWith('/kategoria/slovensko') ? slovakiaTheme : pathname.startsWith('/kategoria/svet') ? worldTheme : pathname.startsWith('/kategoria/politika-a-ekonomika') ? economicsTheme : pathname.startsWith('/kategoria/technologie-a-veda') ? techTheme : pathname.startsWith('/kategoria/sport') ? sportTheme : pathname.startsWith('/kategoria/kultura-a-zabava') ? cultureTheme : pathname.startsWith('/kategoria/miestne-spravy') ? localTheme : defaultTheme;
+  const theme = pathname.startsWith('/kategoria/slovensko') ? slovakiaTheme : pathname.startsWith('/kategoria/svet') ? worldTheme : pathname.startsWith('/kategoria/ekonomika') ? economicsTheme : pathname.startsWith('/kategoria/technologie-a-veda') ? techTheme : pathname.startsWith('/kategoria/sport') ? sportTheme : pathname.startsWith('/kategoria/kultura-a-zabava') ? cultureTheme : pathname.startsWith('/kategoria/miestne-spravy') ? localTheme : defaultTheme;
   return (
     <html lang="en">
       <body className={montserrat.className}>
