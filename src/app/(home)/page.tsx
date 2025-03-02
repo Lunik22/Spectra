@@ -6,12 +6,12 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Link from 'next/link';
 import { Box, Container } from "@mui/material";
-import Navbar from "../components/navbar";
-import Menu from "../components/menu";
+import Navbar from "../../components/navbar";
+import Menu from "../../components/menu";
 import ArticleCardLg from "@/components/articleCardLg";
 import { Client, Databases, Query } from "appwrite";
 import { useEffect, useState } from "react";
-import { getArticles } from "./services/articleService";
+import { getArticles } from "../services/articleService";
 import TopicBar from "@/components/topicBar";
 
 

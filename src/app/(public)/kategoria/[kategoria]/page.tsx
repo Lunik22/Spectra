@@ -3,8 +3,8 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Link from 'next/link';
 import { Container } from '@mui/material';
-import Navbar from "../../../components/navbar";
-import Menu from "../../../components/menu";
+import Navbar from "../../../../components/navbar";
+import Menu from "../../../../components/menu";
  
 export default function Page() {
   return (
