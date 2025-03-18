@@ -99,8 +99,8 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
         }
         }}>
         <CardContent sx={{ flex: '1 0 auto'}}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', width: '60%'}}>
               <CardMedia
                   component="img"
                   sx={{ width: '2rem', marginRight: '1rem', borderRadius: '25%' }}

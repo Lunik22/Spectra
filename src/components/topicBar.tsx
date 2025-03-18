@@ -9,6 +9,8 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { formatDistanceToNow, format, formatRelative } from 'date-fns';
 import { sk } from 'date-fns/locale';
+import { Button } from '@mui/material';
+
 
 
 interface TopicBarProps {
@@ -42,6 +44,7 @@ export default function TopicBar({ topic }: TopicBarProps) {
       padding:'1rem', 
       width:'100%', 
       height:"5rem", 
+      justifyContent: 'space-between',
       }}>
       <Box sx={{
         display: 'flex',
@@ -52,6 +55,7 @@ export default function TopicBar({ topic }: TopicBarProps) {
         borderRadius: '30px',
         backdropFilter: 'blur(10px)', 
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        transform: 'translateX(15pt)',
         '&::before': {
             content: '""',
             position: 'absolute',
@@ -67,7 +71,53 @@ export default function TopicBar({ topic }: TopicBarProps) {
         }
         }}>
             <Typography variant="h2" sx={{ color: theme.palette.text.primary }}>{topic}</Typography>
-        </Box>
+      </Box>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'end',
+        gap: '1rem',
+        transform: 'translateX(-15pt)'
+      }}>
+        <Button sx={{
+          background: `radial-gradient(${worldTheme.palette.primary.main}, ${worldTheme.palette.primary.dark})`,
+          borderRadius: '30px',
+          py: '0.5rem',
+          px: '1rem',
+          color: worldTheme.palette.text.primary,
+          transition: '0.3s',
+          ":hover": {
+            boxShadow: `0 4px 6px ${worldTheme.palette.primary.main}`,
+            transition: '0.3s',
+          }
+
+          
+        }}>
+          Liberálne
+        </Button>
+        <Button sx={{
+          background: `radial-gradient(${defaultTheme.palette.primary.main}, ${defaultTheme.palette.primary.dark})`,
+          borderRadius: '30px',
+          py: '0.5rem',
+          px: '1rem',
+          color: defaultTheme.palette.text.primary,
+          
+        }}>
+          Stredové
+        </Button>
+        <Button sx={{
+          background: `radial-gradient(${slovakiaTheme.palette.primary.main}, ${slovakiaTheme.palette.primary.dark})`,
+          borderRadius: '30px',
+          py: '0.5rem',
+          px: '1rem',
+          color: slovakiaTheme.palette.text.primary,
+          
+        }}
+        onAbort={() => console.log("Konzervatívne")}
+        >
+          Konzervatívne
+        </Button>
+      </Box>
     </Box>
       
   );

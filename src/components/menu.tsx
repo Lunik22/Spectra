@@ -49,7 +49,7 @@ export default function menu() {
                 Hlavne Správy
               </Typography>
             </Link>
-            <Link href="/kategoria/pre-teba" passHref>
+            <Link href="/" passHref>
               <Typography 
                 variant="h2"
                 sx={{

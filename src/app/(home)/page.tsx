@@ -24,7 +24,7 @@ export default function Home() {
   useEffect(() => {
     async function fetchArticles() {
       try {
-        const response = await getArticles();
+        const response = await getArticles("0");
         if (response && response.documents) {
           setArticles(response.documents.map((doc: any) => ({
             $id: doc.$id,
