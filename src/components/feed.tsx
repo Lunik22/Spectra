@@ -37,6 +37,7 @@ export default function Feed() {
   const [showArticle, setShowArticle] = useState<{ [key: string]: boolean }>({});
   const [alignments, setAlignments] = useState<{ [key: string]: 'l' | 's' | 'k' }>({});
   const [alignmentsCount, setAlignmentsCount] = useState<{ [key: string]: { 'l': number, 's': number, 'k': number } }>({});
+  const [shownArticles, setShownArticles] = useState<string[]>([]);
 
   const hostname = usePathname();
   const parts = hostname.split('/');

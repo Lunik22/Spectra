@@ -22,19 +22,19 @@ export async function createSessionClient() {
 
     const session = await cookies().get("my-custom-session");
 
-    if (!session || !session.value) {
-        console.error("Session cookie is missing or invalid:", session); // Debugging log
-        throw new Error("No session");
+    if (session?.value) {
+        client.setSession(session.value);
+        return {
+          get account() {
+            return new Account(client);
+          },
+          get avatar() {
+            return new Avatars(client);
+          }
+        };    
+    } else {
+      return null;
     }
 
-    client.setSession(session.value);
-
-    return {
-      get account() {
-        return new Account(client);
-      },
-      get avatar() {
-        return new Avatars(client);
-      }
-    };
+    
 }

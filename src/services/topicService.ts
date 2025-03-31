@@ -25,6 +25,7 @@ export async function getTopics(offset = 0, category: string) {
           Query.greaterThanEqual('TopicLastArticle', timestamp - 172800),
           Query.limit(3),
           Query.offset(offset * 3),
+          Query.orderDesc('TopicLastArticle'),
         ]
       );
     } else {
@@ -36,6 +37,7 @@ export async function getTopics(offset = 0, category: string) {
           Query.limit(3),
           Query.offset(offset * 3),
           Query.contains('TopicCategories', [category]),
+          Query.orderDesc('TopicLastArticle'),
         ]
       );
     }

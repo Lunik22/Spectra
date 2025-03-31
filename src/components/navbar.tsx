@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppBar, Box, Toolbar, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import LoginButton from './loginButton';
@@ -8,14 +8,16 @@ import { getAvatarURL, getLoggedInUser } from '@/appwrite/authService';
 import { User } from '@/types';
 
 export default function Navbar() {
-  const [user, setUser] = React.useState<User | null>(null);
-  const [avatar, setAvatar] = React.useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     getLoggedInUser().then(setUser);
     getAvatarURL().then(buffer => {
-      const base64String = btoa(String.fromCharCode(...Array.from(new Uint8Array(buffer))));
-      setAvatar(`data:image/png;base64,${base64String}`);
+      if (buffer) {
+        const base64String = btoa(String.fromCharCode(...Array.from(new Uint8Array(buffer))));
+        setAvatar(`data:image/png;base64,${base64String}`);
+      }
     });
   }, []);
   const theme = useTheme();

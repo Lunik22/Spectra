@@ -57,7 +57,11 @@ export async function signInWithEmail(formData: FormData) {
 
 export async function getLoggedInUser() {
     try {
-      const { account } = await createSessionClient();
+      const sessionClient = await createSessionClient();
+      if (!sessionClient) {
+        return null; // No session client means user is not logged in
+      }
+      const { account } = sessionClient;
       return await account.get();
     } catch (error) {
       return null;
@@ -65,7 +69,11 @@ export async function getLoggedInUser() {
 }
 
 export async function getAvatarURL() {
-    const avatars = (await createSessionClient()).avatar;
+    const sessionClient = await createSessionClient();
+    if (!sessionClient) {
+        return null; // No session client means user is not logged in
+    }
+    const avatars = sessionClient.avatar;
     const result = avatars.getBrowser(
         Browser.AvantBrowser, 
     );
