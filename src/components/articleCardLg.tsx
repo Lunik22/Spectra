@@ -65,6 +65,15 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
     console.log(formattedDate.toString());
     formattedDate = formattedDate.toString().replace("približne", "");
   }
+  
+  let appliedTheme = theme
+  if (sources[source]?.bias === 'Liberálne') {
+    appliedTheme = worldTheme;
+  } else if (sources[source]?.bias === 'Stredové') {
+    appliedTheme = defaultTheme;
+  } else if (sources[source]?.bias === 'Konzervatívne') {
+    appliedTheme = slovakiaTheme;
+  }
 
   return (
     <Card sx={{ display: 'flex', height: '20rem', marginY: '1.5rem', alignItems: 'center'}}>
@@ -91,7 +100,7 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundImage: `radial-gradient(${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+            backgroundImage: `radial-gradient(${appliedTheme.palette.primary.main}, ${appliedTheme.palette.primary.dark})`,
             //backgroundColor: theme.palette.primary.main,
             opacity: 0.8, 
             zIndex: -1,
@@ -121,8 +130,8 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
                     color: 'text.primary',
                     WebkitTapHighlightColor: 'primary.main',
                     '&::selection': {
-                      backgroundColor: theme.palette.text.primary,
-                      color: theme.palette.primary.dark,
+                      backgroundColor: appliedTheme.palette.text.primary,
+                      color: appliedTheme.palette.primary.dark,
                     },
                 }}>
                   {sources[source]["name"]}
@@ -136,8 +145,8 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
                   WebkitTapHighlightColor: 'primary.main',
                   width: '100%',
                   '&::selection': {
-                    backgroundColor: theme.palette.text.primary,
-                    color: theme.palette.primary.dark,
+                    backgroundColor: appliedTheme.palette.text.primary,
+                    color: appliedTheme.palette.primary.dark,
                   },
                   textAlign: 'right'
                 }}>
@@ -153,7 +162,7 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
                 WebkitTapHighlightColor: 'primary.main',
                 transition: '0.3s',
                 ':hover': {
-                  color: theme.palette.primary.main,
+                  color: appliedTheme.palette.primary.main,
                   transition: '0.3s',
                 }
               }}
@@ -165,7 +174,7 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
             <img 
-              src={theme.custom.arrowPath} 
+              src={appliedTheme.custom.arrowPath} 
               style={{
                 height: '1.5rem',
                 width: '1.5rem',
@@ -173,7 +182,7 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
               }} 
             />
             <img 
-              src={theme.custom.arrowPath} 
+              src={appliedTheme.custom.arrowPath} 
               style={{
                 height: '1.5rem',
                 width: '1.5rem',

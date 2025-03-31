@@ -43,7 +43,7 @@ export default function Navbar() {
           {user ? (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <img 
-                src={avatar || '/default-avatar.png'} 
+                src={avatar || '/imgs/main/defaultAvatar.png'} 
                 style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%' }} 
               />
               <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>

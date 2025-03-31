@@ -23,15 +23,19 @@ export async function getAvailableAlignments(topic: string) {
       [
         Query.contains('ArticleTopics', [topic]),
         Query.contains('ArticleAlignment', [alignment]),
-        Query.greaterThanEqual('ArticleDate', timestamp - 172800),
+        Query.greaterThanEqual('ArticleDate', timestamp - 86400),
       ]
     );
+
     if (response.documents.length > 0 ) {
       availableAlignments[alignment] = response.documents.length;
       console.log(`Alignment ${alignment} has ${response.documents.length} articles`);
     }
   }
   console.log(availableAlignments);
+
+  
+
   if (availableAlignments['l'] > 0 || availableAlignments['s'] > 0 || availableAlignments['k'] > 0) {
     return availableAlignments;
   } else {
@@ -42,6 +46,7 @@ export async function getAvailableAlignments(topic: string) {
 
 export async function getNewestArticle(topic: string, availableAlignments: { 'l': number, 's': number, 'k': number }, alignment: 'l' | 's' | 'k' | '' = '', limit: number = 1) {
   const alignments = [];
+  let timestamp = Math.floor(Date.now() / 1000);
   for (const alignment of Object.keys(availableAlignments) as Array<'l' | 's' | 'k'>) {
     if (availableAlignments[alignment] > 0) {
       alignments.push(alignment);
@@ -70,6 +75,8 @@ export async function getNewestArticle(topic: string, availableAlignments: { 'l'
         Query.contains('ArticleTopics', [topic]),
         Query.limit(limit),
         Query.contains('ArticleAlignment', [alignmentLocal]),
+        Query.greaterThanEqual('ArticleDate', timestamp - 86400),
+        Query.orderDesc('ArticleDate'),
       ]
     );
     if (response.documents.length > 0) {
