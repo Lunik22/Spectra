@@ -1,76 +1,58 @@
 'use client';
 import React from 'react';
-import { AppBar, Box, Button, InputBase, Toolbar } from '@mui/material';
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import LoginButton from './loginButton';
+import SearchBar from './searchBar';
+import { getAvatarURL, getLoggedInUser } from '@/appwrite/authService';
+import { User } from '@/types';
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-}));
+export default function Navbar() {
+  const [user, setUser] = React.useState<User | null>(null);
+  const [avatar, setAvatar] = React.useState<string | null>(null);
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  width: '100%',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
-  },
-}));
-
-
-export default function navbar() {
+  React.useEffect(() => {
+    getLoggedInUser().then(setUser);
+    getAvatarURL().then(buffer => {
+      const base64String = btoa(String.fromCharCode(...Array.from(new Uint8Array(buffer))));
+      setAvatar(`data:image/png;base64,${base64String}`);
+    });
+  }, []);
   const theme = useTheme();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{
-        py:"2rem", 
-        display:'flex', 
+        py: "2rem", 
+        display: 'flex', 
         boxShadow: 'none', 
         marginBottom: '0rem', 
         backdropFilter: 'blur(30px)',
-        '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 0.75,
-            zIndex: -1,
-            backgroundColor: theme.palette.primary.darker,
-          },
-        }} color='transparent'>
-        <Toolbar sx={{ justifyContent: 'center'}}>
+        zIndex: theme.zIndex.drawer + 1, 
+        backgroundColor: `${theme.palette.primary.darker}CC`,
+        }}>
+        <Toolbar sx={{ 
+          justifyContent: 'center',
+          display: 'flex',
+          gap: '15rem',
+          position: 'relative',
+          zIndex: 1, 
+        }}>
+          <SearchBar/>
           <img src={theme.custom.logoPath} alt="" style={{ height: '3rem'}}/>
-          
+          {user ? (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <img 
+                src={avatar || '/default-avatar.png'} 
+                style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%' }} 
+              />
+              <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
+                {user.name}
+              </Typography>
+            </Box>
+          ) : (
+            <LoginButton />
+          )}
         </Toolbar>
       </AppBar>
     </Box>

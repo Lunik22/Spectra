@@ -1,18 +1,18 @@
 'use client';
 import React from 'react';
-import { AppBar, Box, Button, InputBase, Toolbar, Typography } from '@mui/material';
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { defaultTheme, slovakiaTheme, worldTheme, economicsTheme, techTheme, sportTheme, cultureTheme, localTheme } from '../app/theme';
 import Link from 'next/link';
 
-export default function menu() {
+export default function Menu() {
     const theme = useTheme();
     return (
-      <AppBar position="fixed" sx={{paddingTop:"7rem", display:'flex', boxShadow: 'none'}} color='transparent'>
-        <Toolbar sx={{ justifyContent: 'center'}}>
+      <AppBar position="fixed" sx={{paddingTop:"7rem", display:'flex', boxShadow: 'none', zIndex: 2}} color='transparent'>
+        <Toolbar sx={{ justifyContent: 'center', alignItems: 'center' }}>
           <Box sx={{ 
             flexGrow: 1, 
-            display: { xs: 'none', sm: 'none', md: 'none', lg: 'flex'}, 
+            display: { xs: 'none', sm: 'none', md: 'flex', lg: 'flex'}, 
             justifyContent: 'center',
             alignItems: 'center',
             gap: '1.25rem',
@@ -22,6 +22,7 @@ export default function menu() {
             marginLeft: '-2%',
             marginRight: '-2%',
             backdropFilter: 'blur(10px)', 
+            paddingTop: '0.25rem',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             '&::before': {
                 content: '""',
@@ -41,6 +42,9 @@ export default function menu() {
                 sx={{
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
+                  display: 'flex',
+                  alignItems: 'center', // Vertically center the text
+                  height: '100%', // Ensure the height is 100% to center vertically
                   '&:hover': {
                     color: defaultTheme.palette.primary.main,
                     transition: 'color 0.3s',
@@ -55,6 +59,9 @@ export default function menu() {
                 sx={{
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
+                  display: 'flex',
+                  alignItems: 'center', // Vertically center the text
+                  height: '100%', // Ensure the height is 100% to center vertically
                   '&:hover': {
                     color: defaultTheme.palette.primary.main,
                     transition: 'color 0.3s',
@@ -69,6 +76,9 @@ export default function menu() {
                 sx={{
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
+                  display: 'flex',
+                  alignItems: 'center', // Vertically center the text
+                  height: '100%', // Ensure the height is 100% to center vertically
                   '&:hover': {
                     color: slovakiaTheme.palette.primary.main,
                     transition: 'color 0.3s',
@@ -83,6 +93,9 @@ export default function menu() {
                 sx={{
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
+                  display: 'flex',
+                  alignItems: 'center', // Vertically center the text
+                  height: '100%', // Ensure the height is 100% to center vertically
                   '&:hover': {
                     color: worldTheme.palette.primary.main,
                     transition: 'color 0.3s',
@@ -97,6 +110,9 @@ export default function menu() {
                 sx={{
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
+                  display: 'flex',
+                  alignItems: 'center', // Vertically center the text
+                  height: '100%', // Ensure the height is 100% to center vertically
                   '&:hover': {
                     color: economicsTheme.palette.primary.main,
                     transition: 'color 0.3s',
@@ -111,6 +127,9 @@ export default function menu() {
                 sx={{
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
+                  display: 'flex',
+                  alignItems: 'center', // Vertically center the text
+                  height: '100%', // Ensure the height is 100% to center vertically
                   '&:hover': {
                     color: techTheme.palette.primary.main,
                     transition: 'color 0.3s',
@@ -125,6 +144,9 @@ export default function menu() {
                 sx={{
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
+                  display: 'flex',
+                  alignItems: 'center', // Vertically center the text
+                  height: '100%', // Ensure the height is 100% to center vertically
                   '&:hover': {
                     color: sportTheme.palette.primary.main,
                     transition: 'color 0.3s',
@@ -133,18 +155,21 @@ export default function menu() {
                 Šport
               </Typography>
             </Link>
-            <Link href="/kategoria/miestne-spravy" passHref>
+            <Link href="/kategoria/zivotny-styl" passHref>
               <Typography 
                 variant="h2"
                 sx={{
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
+                  display: 'flex',
+                  alignItems: 'center', // Vertically center the text
+                  height: '100%', // Ensure the height is 100% to center vertically
                   '&:hover': {
                     color: localTheme.palette.primary.main,
                     transition: 'color 0.3s',
                   }
                 }}>
-                Miestne Správy
+                Životný štýl
               </Typography>
             </Link>
             <Link href="/kategoria/kultura-a-zabava" passHref>
@@ -153,6 +178,9 @@ export default function menu() {
                 sx={{
                   color: theme.palette.text.primary,
                   transition: 'color 0.3s',
+                  display: 'flex',
+                  alignItems: 'center', // Vertically center the text
+                  height: '100%', // Ensure the height is 100% to center vertically
                   '&:hover': {
                     color: cultureTheme.palette.primary.main,
                     transition: 'color 0.3s',
@@ -161,11 +189,8 @@ export default function menu() {
                 Kultúra a Zábava
               </Typography>
             </Link>
-
-
           </Box>
-          
         </Toolbar>
       </AppBar>
     );
-  }
+}

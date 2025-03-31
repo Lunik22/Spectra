@@ -1,24 +1,10 @@
 "use client";
-import Image from "next/image";
-import styles from "./page.module.css";
 import Typography from "@mui/material/Typography";
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Link from 'next/link';
-import { AppBar, Card, Container, Toolbar, useTheme } from "@mui/material";
-import { useRouter } from "next/navigation";
-import useAuth from "@/context/useAuth";
+import { Card, Container, useTheme } from "@mui/material";
 import LoginCard from "@/components/loginCard";
 
-export default function Login() {
-    const router = useRouter();
-    const theme = useTheme();
-    const { authStatus } = useAuth();
-
-    if (authStatus) {
-        router.replace("/profile");
-        return <></>;
-    }
+export default async function Login() {
+    const theme = useTheme()
 
     return(
         <Container sx={{ 

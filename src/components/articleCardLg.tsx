@@ -1,39 +1,38 @@
 'use client';
 import * as React from 'react';
-import { useTheme, hexToRgb, ThemeProvider } from '@mui/material/styles';
-import { defaultTheme, slovakiaTheme, worldTheme, economicsTheme, techTheme, sportTheme, cultureTheme, localTheme } from '../app/theme';
+import { useTheme, ThemeProvider } from '@mui/material/styles';
+import { defaultTheme, slovakiaTheme, worldTheme} from '../app/theme';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { formatDistanceToNow, format, formatRelative } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { sk } from 'date-fns/locale';
+import Link from 'next/link';
+import { ArticleCardLgProps } from '@/types';
 
 
-interface ArticleCardLgProps {
-  title: string;
-  image: string;
-  date: string;
-  sourceLink: string;
-}
 
-const sources = {
-  "index.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "svet.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "domov.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "kultura.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "komentare.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "tech.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "zena.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "primar.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "cestovanie.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "closer.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "byvanie.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "dennikn.sk": { "name": "Denník N", "altImg": "https://www.o2.sk/documents/2355222/107247240/icon-dennikn-rect.png", "logo": "/imgs/logos/DennikNLogo.jpg", "bias": "Liberálne" },
-  "e.dennikn.sk": { "name": "Denník E", "altImg": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fdennikn.sk%2Fautor%2Fdennike%2F&psig=AOvVaw0uwr7U4o-jadgTJj6kOVl1&ust=1737018174187000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNDJ5I2v94oDFQAAAAAdAAAAABAE", "logo": "https://img.projektn.sk/wp-static/2019/08/E-logopack-ko%CC%81pia.png", "bias": "Liberálne" },
-  "www.aktuality.sk": { "name": "Aktuality.sk", "altImg": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvSB7Dmy62t58koXC7VnHpMhiAX0MFJMwg61oA62ZbsVYiDWDCpl-sBQSHj9Cuu-vjgcA&usqp=CAU", "logo": "https://yt3.googleusercontent.com/UpztC0l89FsGPrBDPOO39yCse9NtL5BMNCEUOG_RpWf2HP3JVhRYeefDd3zF2cO6Y43_Gwdkww=s900-c-k-c0x00ffffff-no-rj", "bias": "Liberálne" },
-  "spravy.stvr.sk": { "name": "Správy STVR", "altImg": "https://www.rtvs.sk/media/a501/image/file/2/0991/spravy.png", "logo": "https://play-lh.googleusercontent.com/ZGHCs-gYk1Nh4feuAwS7l2A9q9yGfZ-Ol9RSUfRwromvJcV6FbDaWsHELtf40XME1y1J", "bias": "Stredové" },
+const sources: { [key: string]: { name: string; altImg: string; logo?: string; bias: string } } = {
+  "index.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "svet.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "domov.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "kultura.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "komentare.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "tech.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "zena.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "primar.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "cestovanie.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "closer.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "byvanie.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
+  "dennikn.sk": { "name": "Denník N", "altImg": "/imgs/altImgs/DennikNAlt.jpg", "logo": "/imgs/logos/DennikNLogo.jpg", "bias": "Liberálne" },
+  "e.dennikn.sk": { "name": "Denník N", "altImg": "/imgs/altImgs/DennikNAlt.jpg", "logo": "/imgs/logos/DennikNLogo.jpg", "bias": "Liberálne" },
+  "www.aktuality.sk": { "name": "Aktuality.sk", "altImg": "/imgs/altImgs/AktualitySkAlt.jpg", "bias": "Liberálne" },
+  "spravy.stvr.sk": { "name": "Správy STVR", "altImg": "/imgs/altImgs/SpravyStvrAlt.jpg", "logo": "/imgs/logos/SpravyStvrLogo.jpg", "bias": "Stredové" },
+  "tvnoviny.sk": { "name": "TVNoviny.sk", "altImg": "/imgs/altImgs/TvNovinyAlt.jpg", "logo": "/imgs/logos/TvNovinyLogo.jpg", "bias": "Stredové" },
+  "www.postoj.sk": { "name": "Denník Postoj", "altImg": "/imgs/altImgs/DennikPostojAlt.jpg", "logo": "/imgs/logos/DennikPostojLogo.jpg", "bias": "Konzervatívne" },
+  "hnonline.sk": { "name": "Hospodárske Noviny", "altImg": "/imgs/altImgs/HospodarskeNovinyAlt.jpg", "logo": "/imgs/logos/HospodarskeNovinyLogo.jpg", "bias": "Konzervatívne" },
 };
 
 function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
@@ -47,7 +46,8 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
   }
 
 
-  if (image == null) {
+  console.log(image)
+  if (image == null || image == "") {
     image = sources[source]["altImg"];
   }
 
@@ -93,66 +93,94 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
             bottom: 0,
             backgroundImage: `radial-gradient(${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
             //backgroundColor: theme.palette.primary.main,
-            opacity: 0.7, 
+            opacity: 0.8, 
             zIndex: -1,
             borderRadius: '30px'
         }
         }}>
         <CardContent sx={{ flex: '1 0 auto'}}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', width: '60%'}}>
-              <CardMedia
-                  component="img"
-                  sx={{ width: '2rem', marginRight: '1rem', borderRadius: '25%' }}
-                  image={sources[source]["logo"]}
-                  alt="Img"
-              />
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: 'column',
+            height: '100%'
+          }}>
+            <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', width: '75%'}}>
+                <CardMedia
+                    component="img"
+                    sx={{ width: '2rem', marginRight: '1rem', borderRadius: '25%' }}
+                    image={sources[source]["logo"]}
+                    alt="Img"
+                />
+                <Typography 
+                  component="div" 
+                  variant="h3"
+                  sx={{
+                    color: 'text.primary',
+                    WebkitTapHighlightColor: 'primary.main',
+                    '&::selection': {
+                      backgroundColor: theme.palette.text.primary,
+                      color: theme.palette.primary.dark,
+                    },
+                }}>
+                  {sources[source]["name"]}
+                </Typography>
+              </Box>
               <Typography 
                 component="div" 
                 variant="h3"
                 sx={{
                   color: 'text.primary',
                   WebkitTapHighlightColor: 'primary.main',
+                  width: '100%',
                   '&::selection': {
                     backgroundColor: theme.palette.text.primary,
                     color: theme.palette.primary.dark,
                   },
+                  textAlign: 'right'
                 }}>
-                
-                {sources[source]["name"]}
+                {formattedDate}
               </Typography>
             </Box>
-            <Typography 
-              component="div" 
-              variant="h3"
+            <Typography
+              variant="h1"
+              component="div"
               sx={{
                 color: 'text.primary',
+                padding: '1rem 0 1rem 0',
                 WebkitTapHighlightColor: 'primary.main',
-                width: '100%',
-                '&::selection': {
-                  backgroundColor: theme.palette.text.primary,
-                  color: theme.palette.primary.dark,
-                },
-                textAlign: 'right'
-              }}>
-              {formattedDate}
+                transition: '0.3s',
+                ':hover': {
+                  color: theme.palette.primary.main,
+                  transition: '0.3s',
+                }
+              }}
+            >
+              <Link href={sourceLink} passHref>
+                {title}
+              </Link>
             </Typography>
           </Box>
-          <Typography
-            variant="h1"
-            component="div"
-            sx={{
-              color: 'text.primary',
-              padding: '1rem 0 1rem 0',
-              WebkitTapHighlightColor: 'primary.main',
-              '&::selection': {
-                backgroundColor: theme.palette.text.primary,
-                color: theme.palette.primary.dark,
-              },
-            }}
-          >
-            {title}
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+            <img 
+              src={theme.custom.arrowPath} 
+              style={{
+                height: '1.5rem',
+                width: '1.5rem',
+                transform: 'rotate(180deg)'
+              }} 
+            />
+            <img 
+              src={theme.custom.arrowPath} 
+              style={{
+                height: '1.5rem',
+                width: '1.5rem',
+              }} 
+            />
+          </Box>
+          </Box>
         </CardContent>
       </Box>
       

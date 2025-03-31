@@ -1,7 +1,5 @@
 'use client';
-import type { Metadata } from "next";
 import "./globals.css";
-import Container from "@mui/material/Container"
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { defaultTheme, slovakiaTheme, worldTheme, economicsTheme, techTheme, sportTheme, cultureTheme, localTheme } from './theme';
@@ -18,7 +16,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
-  const theme = pathname.startsWith('/kategoria/slovensko') ? slovakiaTheme : pathname.startsWith('/kategoria/svet') ? worldTheme : pathname.startsWith('/kategoria/ekonomika') ? economicsTheme : pathname.startsWith('/kategoria/technologie-a-veda') ? techTheme : pathname.startsWith('/kategoria/sport') ? sportTheme : pathname.startsWith('/kategoria/kultura-a-zabava') ? cultureTheme : pathname.startsWith('/kategoria/miestne-spravy') ? localTheme : defaultTheme;
+  const theme = pathname.startsWith('/kategoria/slovensko') || pathname.startsWith('/tema/slovensko') ? slovakiaTheme : pathname.startsWith('/kategoria/svet') || pathname.startsWith('/tema/svet') ? worldTheme : pathname.startsWith('/kategoria/ekonomika') || pathname.startsWith('/tema/ekonomika')  ? economicsTheme : pathname.startsWith('/kategoria/technologie-a-veda') || pathname.startsWith('/tema/technologie-a-veda') ? techTheme : pathname.startsWith('/kategoria/sport') || pathname.startsWith('/tema/sport')? sportTheme : pathname.startsWith('/kategoria/kultura-a-zabava') || pathname.startsWith('/tema/kultura-a-zabava') ? cultureTheme : pathname.startsWith('/kategoria/zivotny-styl') || pathname.startsWith('/tema/zivotny-styl') ? localTheme : defaultTheme;
   return (
     <html lang="en">
       <body className={montserrat.className}>

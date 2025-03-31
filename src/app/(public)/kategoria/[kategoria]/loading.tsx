@@ -1,11 +1,16 @@
-import * as React from 'react';
-import Stack from '@mui/material/Stack';
-import CircularProgress from '@mui/material/CircularProgress';
+import { Box, CircularProgress, Fade } from '@mui/material';
 
-export default function loading() {
+export default function Loading() {
   return (
-    <Stack sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%"}}>
-      <CircularProgress color="primary" />
-    </Stack>
+    <Fade in={true} timeout={500}>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh'
+      }}>
+        <CircularProgress />
+      </Box>
+    </Fade>
   );
 }

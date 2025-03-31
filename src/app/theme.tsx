@@ -9,12 +9,14 @@ declare module '@mui/material/styles' {
   interface Theme {
     custom: {
       logoPath: string;
+      arrowPath: string;
     };
   }
 
   interface ThemeOptions {
     custom?: {
       logoPath?: string;
+      arrowPath?: string;
     };
   }
 
@@ -71,6 +73,7 @@ const defaultTheme = createTheme({
   },
   custom: {
     logoPath: '/imgs/main/SpectraLogoMain.svg',
+    arrowPath: '/imgs/main/arrow.svg',
   },
 });
 
@@ -112,6 +115,7 @@ const slovakiaTheme = createTheme({
   },
   custom: {
     logoPath: '/imgs/slovensko/SpectraLogo-slovensko.svg',
+    arrowPath: '/imgs/slovensko/arrow.svg',
   },
   
 });
@@ -154,6 +158,7 @@ const worldTheme = createTheme({
   },
   custom: {
     logoPath: '/imgs/svet/SpectraLogo-svet.svg',
+    arrowPath: '/imgs/svet/arrow.svg',
   },
   
 });

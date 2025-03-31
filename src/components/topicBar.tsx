@@ -1,135 +1,213 @@
 'use client';
 import * as React from 'react';
-import { useTheme, hexToRgb, ThemeProvider } from '@mui/material/styles';
-import { defaultTheme, slovakiaTheme, worldTheme, economicsTheme, techTheme, sportTheme, cultureTheme, localTheme } from '../app/theme';
+import { useTheme } from '@mui/material/styles';
+import { defaultTheme, slovakiaTheme, worldTheme } from '../app/theme';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { formatDistanceToNow, format, formatRelative } from 'date-fns';
-import { sk } from 'date-fns/locale';
-import { Button } from '@mui/material';
-
-
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { getNewestArticle } from '@/services/newestArticleService';
+import { Topic } from '@/types';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface TopicBarProps {
-  topic: string;
+  topic: Topic;
+  alignment: 'l' | 's' | 'k';
+  onArticleChange: (topicId: string, newArticle: any, alignment: 'l' | 's' | 'k') => void;
+  alignmentCounts: { 'l': number, 's': number, 'k': number };
 }
 
-const sources = {
-  "index.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "svet.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "domov.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "kultura.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "komentare.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "tech.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "zena.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "primar.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "cestovanie.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "closer.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "byvanie.sme.sk": { "name": "Denník SME", "altImg": "https://play-lh.googleusercontent.com/aGRkiYx0cRu0-8vVFW7XKqDVVJE6uDACbvy1ZWN7oC-DoK5pZRnI7drScbmLPoQBaJI", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
-  "dennikn.sk": { "name": "Denník N", "altImg": "https://www.o2.sk/documents/2355222/107247240/icon-dennikn-rect.png", "logo": "/imgs/logos/DennikNLogo.jpg", "bias": "Liberálne" },
-  "e.dennikn.sk": { "name": "Denník E", "altImg": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fdennikn.sk%2Fautor%2Fdennike%2F&psig=AOvVaw0uwr7U4o-jadgTJj6kOVl1&ust=1737018174187000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNDJ5I2v94oDFQAAAAAdAAAAABAE", "logo": "https://img.projektn.sk/wp-static/2019/08/E-logopack-ko%CC%81pia.png", "bias": "Liberálne" },
-  "aktuality.sk": { "name": "Aktuality.sk", "altImg": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvSB7Dmy62t58koXC7VnHpMhiAX0MFJMwg61oA62ZbsVYiDWDCpl-sBQSHj9Cuu-vjgcA&usqp=CAU", "logo": "https://yt3.googleusercontent.com/UpztC0l89FsGPrBDPOO39yCse9NtL5BMNCEUOG_RpWf2HP3JVhRYeefDd3zF2cO6Y43_Gwdkww=s900-c-k-c0x00ffffff-no-rj", "bias": "Liberálne" },
-  "spravy.stvr.sk": { "name": "Správy STVR", "altImg": "https://www.rtvs.sk/media/a501/image/file/2/0991/spravy.png", "logo": "https://play-lh.googleusercontent.com/ZGHCs-gYk1Nh4feuAwS7l2A9q9yGfZ-Ol9RSUfRwromvJcV6FbDaWsHELtf40XME1y1J", "bias": "Stredové" },
-};
+const articleName = (count: number): string => {
+  if (count === 1) {
+    return 'článok';
+  } else if (count > 1 && count < 5) {
+    return 'články';
+  } else {
+    return 'článkov';
+  }
+}
 
-export default function TopicBar({ topic }: TopicBarProps) {
-  const theme = useTheme();
 
-  return (
-    <Box sx={{ 
-      display: 'flex', 
-      padding:'1rem', 
-      width:'100%', 
-      height:"5rem", 
-      justifyContent: 'space-between',
-      }}>
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '1rem',
-        padding: '1rem',
+export default function TopicBar({ topic, alignment, onArticleChange, alignmentCounts }: TopicBarProps) {
+    const theme = useTheme();
+    const [currentAlignment, setCurrentAlignment] = React.useState(alignment);
+
+    const handleAlignment = async (event: React.MouseEvent<HTMLElement>, newAlignment: 'l' | 's' | 'k') => {
+      if (newAlignment !== null) {
+        setCurrentAlignment(newAlignment);
+        const newArticle = await getNewestArticle(topic.$id, alignmentCounts, newAlignment);
+        onArticleChange(topic.$id, newArticle, newAlignment);
+        console.log(newArticle);
+      }
+    };
+
+    React.useEffect(() => {
+      setCurrentAlignment(alignment);
+    }, [alignment]);
+
+    const getButtonStyles = (value: string, disabled: boolean) => {
+      let themePalette;
+      if (value === 'l') {
+        themePalette = worldTheme.palette;
+      } else if (value === 's') {
+        themePalette = defaultTheme.palette;
+      } else {
+        themePalette = slovakiaTheme.palette;
+      }
+
+      return {
         borderRadius: '30px',
-        backdropFilter: 'blur(10px)', 
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        transform: 'translateX(15pt)',
+        py: '0.5rem',
+        px: '1rem',
+        color: themePalette.text.primary,
+        transition: 'color 0.3s, background 0.3s',
         '&::before': {
+              content: '""',
+              position: 'absolute',
+              background: disabled ? 'grey' : `radial-gradient(${themePalette.primary.main}, ${themePalette.primary.dark})`,
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              opacity: 0.8, 
+              zIndex: -1,
+              borderRadius: '30px',
+              transition: '0.3s',
+        },
+        ":hover": {
+          transition: 'color 0.3s, background 0.3s',
+          borderRadius: '30px',
+          '&::before': {
             content: '""',
             position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundImage: `radial-gradient(${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-            //backgroundColor: theme.palette.primary.main,
-            opacity: 0.7, 
+            opacity: 1, 
             zIndex: -1,
             borderRadius: '30px'
-        }
-        }}>
-            <Typography variant="h2" sx={{ color: theme.palette.text.primary }}>{topic}</Typography>
-      </Box>
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'end',
-        gap: '1rem',
-        transform: 'translateX(-15pt)'
-      }}>
-        <Button sx={{
-          background: `radial-gradient(${worldTheme.palette.primary.main}, ${worldTheme.palette.primary.dark})`,
-          borderRadius: '30px',
-          py: '0.5rem',
-          px: '1rem',
-          color: worldTheme.palette.text.primary,
-          transition: '0.3s',
-          ":hover": {
-            boxShadow: `0 4px 6px ${worldTheme.palette.primary.main}`,
-            transition: '0.3s',
           }
+        },
+        "&.Mui-selected": {
+          color: themePalette.primary.main,
+          borderRadius: '30px',
+          background: disabled ? 'grey' : `${themePalette.text.primary}`,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            opacity: 1, 
+            zIndex: -1,
+            borderRadius: '30px'
+          },
+          ":hover": {
+            borderRadius: '30px',
+            background: disabled ? 'grey' : `${themePalette.text.primary}`,
+          }
+        }
+      };
+    };
 
-          
-        }}>
-          Liberálne
-        </Button>
-        <Button sx={{
-          background: `radial-gradient(${defaultTheme.palette.primary.main}, ${defaultTheme.palette.primary.dark})`,
-          borderRadius: '30px',
-          py: '0.5rem',
-          px: '1rem',
-          color: defaultTheme.palette.text.primary,
-          
-        }}>
-          Stredové
-        </Button>
-        <Button sx={{
-          background: `radial-gradient(${slovakiaTheme.palette.primary.main}, ${slovakiaTheme.palette.primary.dark})`,
-          borderRadius: '30px',
-          py: '0.5rem',
-          px: '1rem',
-          color: slovakiaTheme.palette.text.primary,
-          
-        }}
-        onAbort={() => console.log("Konzervatívne")}
-        >
-          Konzervatívne
-        </Button>
-      </Box>
-    </Box>
+    const hostname = usePathname();
+    const parts = hostname.split('/');
+    let category = "0";
+    if (parts[1] === 'kategoria') {
+      category = parts[2];
+    } else {
+      category
+    }
+
+    console.log(alignmentCounts);
+    console.log(alignment);
+
+
+    if (alignment === 'l' || alignment === 's' || alignment === 'k') {
+      return (
+        <Box sx={{ 
+          display: 'flex', 
+          padding:'1rem', 
+          width:'100%', 
+          height:"5rem", 
+          justifyContent: 'space-between',
+          }}>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '2rem',
+            py: '1rem',
+            px: '2rem',
+            borderRadius: '30px',
+            width: '50%',
+            backdropFilter: 'blur(10px)', 
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            transform: 'translateX(15pt)',
+            '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundImage: `linear-gradient(to right,${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                opacity: 0.8, 
+                zIndex: -1,
+                borderRadius: '30px',
+                transition: '0.3s',
+            },
+            ':hover': {
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                opacity: 1, 
+                zIndex: -1,
+                borderRadius: '30px'
+              }
+            }
+            }}>
+            <Link href={`/tema/${category}/${topic.$id}`} passHref>
+              <Typography variant="h2" sx={{ color: theme.palette.text.primary }}>{topic.TopicName}</Typography>
+            </Link>
+          </Box>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'end',
+            gap: '1rem',
+            transform: 'translateX(-15pt)'
+          }}>
+            <ToggleButtonGroup
+              value={currentAlignment}
+              exclusive
+              onChange={handleAlignment}
+              aria-label="text alignment"
+              sx={{ 
+                display: 'flex',
+                gap: '1rem', 
+              }}
+            >
+              <ToggleButton value='l' aria-label='l' sx={getButtonStyles('l', alignmentCounts['l'] === 0)} disabled={alignmentCounts['l'] === 0}>
+                {alignmentCounts['l']} {articleName(alignmentCounts['l'])}
+              </ToggleButton>
+              <ToggleButton value='s' aria-label='s' sx={getButtonStyles('s', alignmentCounts['s'] === 0)} disabled={alignmentCounts['s'] === 0}>
+                {alignmentCounts['s']} {articleName(alignmentCounts['s'])}
+              </ToggleButton>
+              <ToggleButton value='k' aria-label='k' sx={getButtonStyles('k', alignmentCounts['k'] === 0)} disabled={alignmentCounts['k'] === 0}>
+                {alignmentCounts['k']} {articleName(alignmentCounts['k'])}
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+        </Box>
+      );
+    } else{
       
-  );
+    }
+    
 }
-
-
-/*export default function ThemedArticleCardLg(props: ArticleCardLgProps) {
-  const source = props.sourceLink.split("/")[2] as keyof typeof sources;
-  const cardTheme = sources[source]?.bias === "Liberálne" ? worldTheme : sources[source]?.bias === "Stredové" ? defaultTheme : sources[source]?.bias === "Konzervatívne" ? slovakiaTheme : defaultTheme;
-  return (
-    <ThemeProvider theme={cardTheme}>
-      <ArticleCardLg {...props} />
-    </ThemeProvider>
-  );
-}*/
