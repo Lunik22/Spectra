@@ -22,9 +22,10 @@ export async function getTopics(offset = 0, category: string) {
         '66e992ad00337f2887d0',
         '673995d50003db697576',
         [
-          Query.greaterThanEqual('TopicLastArticle', timestamp - 172800),
+          Query.greaterThanEqual('TopicLastArticle', timestamp - 86000),
           Query.limit(3),
           Query.offset(offset * 3),
+          Query.orderDesc('TopicLatestArticlesCount'),
           Query.orderDesc('TopicLastArticle'),
         ]
       );
@@ -33,10 +34,11 @@ export async function getTopics(offset = 0, category: string) {
         '66e992ad00337f2887d0',
         '673995d50003db697576',
         [
-          Query.greaterThanEqual('TopicLastArticle', timestamp - 172800),
+          Query.greaterThanEqual('TopicLastArticle', timestamp - 86000),
           Query.limit(3),
           Query.offset(offset * 3),
           Query.contains('TopicCategories', [category]),
+          Query.orderDesc('TopicLatestArticlesCount'),
           Query.orderDesc('TopicLastArticle'),
         ]
       );

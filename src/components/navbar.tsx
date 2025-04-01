@@ -6,19 +6,27 @@ import LoginButton from './loginButton';
 import SearchBar from './searchBar';
 import { getAvatarURL, getLoggedInUser } from '@/appwrite/authService';
 import { User } from '@/types';
+import ProfileDropdown from './profileDropdown';
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
+  
 
   useEffect(() => {
-    getLoggedInUser().then(setUser);
-    getAvatarURL().then(buffer => {
-      if (buffer) {
-        const base64String = btoa(String.fromCharCode(...Array.from(new Uint8Array(buffer))));
-        setAvatar(`data:image/png;base64,${base64String}`);
-      }
-    });
+    try {
+      getLoggedInUser().then(setUser).catch(console.error);
+      getAvatarURL()
+        .then(buffer => {
+          if (buffer) {
+            const base64String = btoa(String.fromCharCode(...Array.from(new Uint8Array(buffer))));
+            setAvatar(`data:image/png;base64,${base64String}`);
+          }
+        })
+        .catch(console.error);
+    } catch (error) {
+      console.error("Error in Navbar useEffect:", error);
+    }
   }, []);
   const theme = useTheme();
 
@@ -43,15 +51,7 @@ export default function Navbar() {
           <SearchBar/>
           <img src={theme.custom.logoPath} alt="" style={{ height: '3rem'}}/>
           {user ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <img 
-                src={avatar || '/imgs/main/defaultAvatar.png'} 
-                style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%' }} 
-              />
-              <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
-                {user.name}
-              </Typography>
-            </Box>
+            <ProfileDropdown/>
           ) : (
             <LoginButton />
           )}

@@ -15,7 +15,8 @@ export async function getAvailableAlignments(topic: string) {
   const alignments: ('l' | 's' | 'k')[] = ['l', 's', 'k'];
   const availableAlignments: { 'l': number, 's': number, 'k': number } = { 'l': 0, 's': 0, 'k': 0 };
   let timestamp = Math.floor(Date.now() / 1000);
-
+  timestamp += 7200
+  console.log(`Timestamp: ${timestamp}`);
   for (const alignment of alignments) {
     const response = await databases.listDocuments(
       '66e992ad00337f2887d0',
