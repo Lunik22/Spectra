@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import LoginButton from './loginButton';
 import SearchBar from './searchBar';
@@ -31,7 +31,7 @@ export default function Navbar() {
   const theme = useTheme();
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Container sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{
         py: "2rem", 
         display: 'flex', 
@@ -42,21 +42,31 @@ export default function Navbar() {
         backgroundColor: `${theme.palette.primary.darker}CC`,
         }}>
         <Toolbar sx={{ 
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           display: 'flex',
-          gap: '15rem',
           position: 'relative',
           zIndex: 1, 
         }}>
           <SearchBar/>
-          <img src={theme.custom.logoPath} alt="" style={{ height: '3rem'}}/>
+          
           {user ? (
+<<<<<<< HEAD
             <ProfileDropdown/>
+=======
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <img 
+                src={avatar || '/imgs/main/defaultAvatar.png'} 
+                style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%' }} 
+              />
+            </Box>
+>>>>>>> 1bf5f80f214ee3327b78e6a618266bf7d520f889
           ) : (
             <LoginButton />
           )}
         </Toolbar>
       </AppBar>
-    </Box>
+    </Container>
   );
 }
+
+//<img src={theme.custom.logoPath} alt="" style={{ height: '3rem'}}/>

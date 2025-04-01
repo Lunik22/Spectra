@@ -65,7 +65,9 @@ export default function Feed() {
       if (newTopicsWArticles.topics.length === 0) {
           setLimit(true);
       } else {
-          setTopics((prevTopics) => [...(prevTopics || []), ...newTopicsWArticles.topics || []]);
+          if (newTopicsWArticles.topics.length > 0) {
+            setTopics((prevTopics) => [...(prevTopics || []), ...newTopicsWArticles.topics || []]);
+          }
           setArticles(prevArticles => ({ ...prevArticles, ...newTopicsWArticles.articles }));
           setShowArticle(prevShowArticle => ({
             ...prevShowArticle,

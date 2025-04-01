@@ -40,7 +40,7 @@ export async function getAvailableAlignments(topic: string) {
   if (availableAlignments['l'] > 0 || availableAlignments['s'] > 0 || availableAlignments['k'] > 0) {
     return availableAlignments;
   } else {
-    return null;
+    return { 'l': 0, 's': 0, 'k': 0 };
   }
 
 }
@@ -62,7 +62,7 @@ export async function getNewestArticle(topic: string, availableAlignments: { 'l'
     if (alignments.length === 1) {
       alignmentLocal = alignments[0] as 'l' | 's' | 'k';
     } else if (alignments.length === 0) {
-      return null;
+      return '';
     } else {
       alignmentLocal = alignments[Math.floor(Math.random() * alignments.length)] as 'l' | 's' | 'k';
     }
@@ -84,10 +84,10 @@ export async function getNewestArticle(topic: string, availableAlignments: { 'l'
       console.log(response.documents[0]);
       return response.documents[0]
     } else {
-      return null;
+      return {};
     }
   } catch (error) {
     console.error(`Error retrieving newest article: ${error}`);
-    return null;
+    return '';
   }
 }
