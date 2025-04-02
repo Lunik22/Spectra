@@ -27,6 +27,7 @@ const articleName = (count: number): string => {
   }
 }
 
+/*123*/ 
 
 export default function TopicBar({ topic, alignment, onArticleChange, alignmentCounts }: TopicBarProps) {
     const theme = useTheme();
