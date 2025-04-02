@@ -26,7 +26,6 @@ export async function getTopics(offset = 0, category: string) {
           Query.limit(3),
           Query.offset(offset * 3),
           Query.orderDesc('TopicLatestArticlesCount'),
-          Query.orderDesc('TopicLastArticle'),
         ]
       );
     } else {
@@ -39,7 +38,6 @@ export async function getTopics(offset = 0, category: string) {
           Query.offset(offset * 3),
           Query.contains('TopicCategories', [category]),
           Query.orderDesc('TopicLatestArticlesCount'),
-          Query.orderDesc('TopicLastArticle'),
         ]
       );
     }
@@ -62,7 +60,7 @@ export async function getTopics(offset = 0, category: string) {
       console.log(`availableAlignmentsResponse for topic ${topic.$id}:`, availableAlignmentsResponse);
 
 
-      if (availableAlignmentsResponse === null) {
+      if (availableAlignmentsResponse.l === 0 && availableAlignmentsResponse.s === 0 && availableAlignmentsResponse.k === 0) {
         console.log(`No available alignments for topic ${topic.$id}`);
       } else {
         topicsDataClean.push(topic);
