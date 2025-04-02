@@ -3,7 +3,7 @@
 import { cardActionsClasses } from "@mui/material";
 import { Client, Databases, Query } from "appwrite"; // Adjust the import based on your project structure
 import { Topic } from "@/types";
-import { getAvailableAlignments, getNewestArticle } from "./newestArticleService";
+import { getAvailableAlignments, getArticle } from "./articleService";
 
 const client = new Client();
 client
@@ -42,12 +42,12 @@ export async function getTopics(offset = 0, category: string) {
       );
     }
 
-    const topicsData = topicResponse.documents.map((doc: any) => ({
+    const topicsData = topicResponse.documents?.map((doc: any) => ({
       $id: doc.$id,
       TopicName: doc.TopicName,
       TopicCategory: doc.TopicCategory,
       TopicArticles: doc.TopicArticles,
-    })) as Topic[];
+    })) as Topic[] || [];
     console.log(topicsData);
 
     const availableAlignments: { [key: string]: any } = {};
@@ -67,7 +67,7 @@ export async function getTopics(offset = 0, category: string) {
         availableAlignments[topic.$id] = availableAlignmentsResponse;
         console.log(`${availableAlignmentsResponse} available alignments for topic ${topic.$id}`);
         if (availableAlignmentsResponse) {
-          const articleResponse = await getNewestArticle(topic.$id, availableAlignmentsResponse);
+          const articleResponse = await getArticle(topic.$id, availableAlignmentsResponse);
           if (articleResponse) {
             articlesData[topic.$id] = articleResponse;
           }
@@ -80,5 +80,42 @@ export async function getTopics(offset = 0, category: string) {
     console.error(`Error retrieving topics collection: ${error}`);
     return null;
   }
+}
+
+export async function getTopic(topic: string, alignment: 'l' | 's' | 'k' | '' = '', offset: number = 0) {
+  let timestamp = Math.floor(Date.now() / 1000);
+  try {
+    let topicResponse;
+    topicResponse = await databases.getDocument(
+      '66e992ad00337f2887d0',
+      '673995d50003db697576',
+      topic,
+    )
+    const topicsData = topicResponse.document
+    console.log(topicsData);
+
+    const availableAlignments: { [key: string]: any } = {};
+    const articlesData: { [key: string]: any} = {};
+
+    
+    const availableAlignmentsResponse = await getAvailableAlignments(topic, timestamp);
+    console.log(`availableAlignmentsResponse for topic ${topic}:`, availableAlignmentsResponse);
+    if (availableAlignmentsResponse.l === 0 && availableAlignmentsResponse.s === 0 && availableAlignmentsResponse.k === 0) {
+      console.log(`No available alignments for topic ${topic}`);
+    } else {
+      console.log(`${availableAlignmentsResponse} available alignments for topic ${topic}`);
+      if (availableAlignmentsResponse) {
+        const articleResponse = await getArticle(topic, availableAlignmentsResponse, alignment, 3, offset);
+        if (articleResponse) {
+          articlesData[topic] = articleResponse;
+        }
+      }
+    }
+
+  } catch (error) {
+    console.error(`Error retrieving topic ${topic}: ${error}`);
+    return null;
+  }
+  
 }
 

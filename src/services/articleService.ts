@@ -11,7 +11,7 @@ client
 const databases = new Databases(client);
 
 
-export async function getAvailableAlignments(topic: string) {
+export async function getAvailableAlignments(topic: string, dateLimit: number = 86400) {
   const alignments: ('l' | 's' | 'k')[] = ['l', 's', 'k'];
   const availableAlignments: { 'l': number, 's': number, 'k': number } = { 'l': 0, 's': 0, 'k': 0 };
   let timestamp = Math.floor(Date.now() / 1000);
@@ -24,7 +24,7 @@ export async function getAvailableAlignments(topic: string) {
       [
         Query.contains('ArticleTopics', [topic]),
         Query.contains('ArticleAlignment', [alignment]),
-        Query.greaterThanEqual('ArticleDate', timestamp - 86400),
+        Query.greaterThanEqual('ArticleDate', timestamp - dateLimit),
       ]
     );
 
@@ -45,7 +45,7 @@ export async function getAvailableAlignments(topic: string) {
 
 }
 
-export async function getNewestArticle(topic: string, availableAlignments: { 'l': number, 's': number, 'k': number }, alignment: 'l' | 's' | 'k' | '' = '', limit: number = 1) {
+export async function getArticle(topic: string, availableAlignments: { 'l': number, 's': number, 'k': number }, alignment: 'l' | 's' | 'k' | '' = '', limit: number = 1, offset: number = 0) {
   const alignments = [];
   let timestamp = Math.floor(Date.now() / 1000);
   for (const alignment of Object.keys(availableAlignments) as Array<'l' | 's' | 'k'>) {
@@ -75,6 +75,7 @@ export async function getNewestArticle(topic: string, availableAlignments: { 'l'
       [
         Query.contains('ArticleTopics', [topic]),
         Query.limit(limit),
+        Query.offset(offset),
         Query.contains('ArticleAlignment', [alignmentLocal]),
         Query.greaterThanEqual('ArticleDate', timestamp - 86400),
         Query.orderDesc('ArticleDate'),
