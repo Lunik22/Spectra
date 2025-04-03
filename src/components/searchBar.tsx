@@ -6,6 +6,8 @@ const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: '30px',
   backgroundColor: alpha(theme.palette.common.white, 0.15),
+  transition: '0.3s background',
+  transform: 'translatex(30pt)',
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
@@ -25,6 +27,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({

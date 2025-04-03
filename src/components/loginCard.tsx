@@ -48,7 +48,7 @@ export default function LoginCard() {
       // Fetch and store new user data
       const loggedInUser = await getLoggedInUser();
       const avatarResponse = await getAvatarURL();
-      const avatarBase64 = Buffer.from(await avatarResponse).toString('base64');
+      const avatarBase64 = avatarResponse ? Buffer.from(avatarResponse).toString('base64') : '';
       const avatarData = `data:image/png;base64,${avatarBase64}`;
 
       Cookies.set('user', JSON.stringify(loggedInUser), { expires: 7 });

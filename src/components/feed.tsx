@@ -7,7 +7,7 @@ import ArticleCardLg from "./articleCardLg";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { getTopics } from "@/services/topicService";
-import { getAvailableAlignments } from "@/services/articleService";
+import { getArticle, getAvailableAlignments } from "@/services/articleService";
 import { usePathname } from "next/navigation";
 import { set } from "date-fns";
 
@@ -29,7 +29,7 @@ function delay(ms: number) {
 export default function Feed() {
   const [topics, setTopics] = useState<Topic[]>();
   const [articles, setArticles] = useState<{ [key: string]: any }>();
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(-1);
   const [loading, setLoading] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
   const [trigger, inView] = useInView();
@@ -53,20 +53,36 @@ export default function Feed() {
 
       setLoading(true);
       setShowProgress(false);
-      setTimeout(() => setShowProgress(true), 500); // Delay the appearance of CircularProgress by 500ms
+      setTimeout(() => setShowProgress(true), 250); // Delay the appearance of CircularProgress by 500ms
 
-      await delay(500);
+      await delay(250);
 
       const nextPage = page + 1;
       
       const newTopicsWArticles = (await getTopics(nextPage, category)) ?? { topics: [], articles: {}, alignmentsCount: {} };
-      
 
       if (newTopicsWArticles.topics.length === 0) {
           setLimit(true);
       } else {
           if (newTopicsWArticles.topics.length > 0) {
             setTopics((prevTopics) => [...(prevTopics || []), ...newTopicsWArticles.topics || []]);
+          }
+          for (const articleId in newTopicsWArticles.articles) {
+            if (shownArticles.includes(articleId)) {
+              const alignmentCount = newTopicsWArticles.alignmentsCount[articleId];
+              if (alignmentCount && Object.values(alignmentCount as { [key: string]: number }).reduce((a, b) => a + b, 0) >= 2) {
+                const newArticle = await getArticle(
+                  newTopicsWArticles.topics.find(topic => topic.$id === articleId)?.$id ?? '',
+                  alignmentCount,
+                  newTopicsWArticles.articles[articleId].ArticleAlignment,
+                  1, // Offset of +1
+                  1
+                );
+                newTopicsWArticles.articles[articleId] = newArticle;
+              }
+            } else {
+              setShownArticles(prev => [...prev, articleId]);
+            }
           }
           setArticles(prevArticles => ({ ...prevArticles, ...newTopicsWArticles.articles }));
           setShowArticle(prevShowArticle => ({
@@ -94,27 +110,30 @@ export default function Feed() {
       }
   }, [inView, loading]);
 
-  const handleArticleChange = (topicId: string, newArticle: any, alignment: 'l' | 's' | 'k') => {
+  const handleArticleChange = async (topicId: string, newArticle: any, alignment: 'l' | 's' | 'k') => {
     setShowArticle(prevShowArticle => ({
       ...prevShowArticle,
-      [topicId]: false
+      [topicId]: false // Hide the current article for the grow-out effect
     }));
+  
     setTimeout(() => {
-      setArticles(prevArticles => ({
-        ...prevArticles,
-        [topicId]: newArticle
-      }));
-      setShowArticle(prevShowArticle => ({
-        ...prevShowArticle,
-        [topicId]: true
-      }));
       setAlignments(prevAlignments => ({
         ...prevAlignments,
-        [topicId]: alignment
+        [topicId]: alignment // Update the alignment
       }));
-    }, 500); // Delay to allow grow-out effect
+  
+      setArticles(prevArticles => ({
+        ...prevArticles,
+        [topicId]: newArticle // Update the article for the new alignment
+      }));
+  
+      setShowArticle(prevShowArticle => ({
+        ...prevShowArticle,
+        [topicId]: true // Show the new article after the grow-in effect
+      }));
+    }, 500); // Delay to allow the grow-out effect
   };
-
+  
 
   return (
       <Stack spacing={2} sx={{ paddingTop: "11rem" }}>

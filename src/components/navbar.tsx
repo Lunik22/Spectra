@@ -48,13 +48,14 @@ export default function Navbar() {
             position: 'relative',
             zIndex: 1, 
           }}>
-            <SearchBar/>
-
-            {user ? (
-              <ProfileDropdown/>
-            ) : (
-              <LoginButton />
-            )}
+            <Container sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <SearchBar/>
+              {user ? (
+                <ProfileDropdown/>
+              ) : (
+                <LoginButton />
+              )}
+            </Container>
           </Toolbar>
         </AppBar>
       </Container>

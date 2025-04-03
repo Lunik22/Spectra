@@ -1,175 +1,123 @@
 "use client";
 
-import { Article, Topic } from "@/types";
 import { Box, CircularProgress, Grow, Stack, Typography } from "@mui/material";
-import TopicBar from "./topicBar";
+import TopicBarXl from "./topicBarXl";
 import ArticleCardLg from "./articleCardLg";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { getTopics } from "@/services/topicService";
-import { getAvailableAlignments } from "@/services/articleService";
+import { getArticle, getAvailableAlignments } from "@/services/articleService";
 import { usePathname } from "next/navigation";
-import { set } from "date-fns";
-
-const subdomainToCategoryMap: { [key: string]: string } = {
-  "": "0",
-  "slovensko": "1",
-  "svet": "2",
-  "ekonomika": "3",
-  "technologie-a-veda": "4", 
-  "sport": "5",
-  "zivotny-styl": "6",
-  "kultura-a-zabava": "7"
-};
+import { getTopic } from "@/services/topicService";
 
 function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export default function Feed() {
-  const [topics, setTopics] = useState<Topic[]>();
-  const [articles, setArticles] = useState<{ [key: string]: any }>();
+export default function TopicFeed() {
+  const [articles, setArticles] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
   const [trigger, inView] = useInView();
   const [limit, setLimit] = useState(false);
-  const [showArticle, setShowArticle] = useState<{ [key: string]: boolean }>({});
-  const [alignments, setAlignments] = useState<{ [key: string]: 'l' | 's' | 'k' }>({});
-  const [alignmentsCount, setAlignmentsCount] = useState<{ [key: string]: { 'l': number, 's': number, 'k': number } }>({});
-  const [shownArticles, setShownArticles] = useState<string[]>([]);
+  const [alignment, setAlignment] = useState<'' | 'l' | 's' | 'k'>('');
+  const [alignmentCounts, setAlignmentCounts] = useState<{ 'l': number, 's': number, 'k': number }>({ l: 0, s: 0, k: 0 });
 
-  const hostname = usePathname();
-  const parts = hostname.split('/');
-  let category = "0";
-  if (parts[1] === 'kategoria') {
-    category = subdomainToCategoryMap[parts[2]];
-  }
+  const pathname = usePathname();
+  console.log(pathname)
+  const parts = pathname.split('/');
+  const topicId = parts[parts.length - 1];
+  console.log(topicId)
+  const topic = getTopic(topicId);
 
-  const loadMoreTopics = async () => {
-      console.log(`Loading more topics for page ${page + 1}`);
-      if (loading) return;
-      if (limit) return;
+  const loadArticles = async () => {
+    if (loading || limit) return;
 
-      setLoading(true);
-      setShowProgress(false);
-      setTimeout(() => setShowProgress(true), 500); // Delay the appearance of CircularProgress by 500ms
+    setLoading(true);
+    setShowProgress(false);
+    setTimeout(() => setShowProgress(true), 250); // Delay the appearance of CircularProgress
 
-      await delay(500);
+    await delay(250);
 
-      const nextPage = page + 1;
-      
-      const newTopicsWArticles = (await getTopics(nextPage, category)) ?? { topics: [], articles: {}, alignmentsCount: {} };
-      
+    const timestamp = Math.floor(Date.now() / 1000);
+    const availableAlignments = await getAvailableAlignments(topicId, timestamp);
+    setAlignmentCounts(availableAlignments);
 
-      if (newTopicsWArticles.topics.length === 0) {
-          setLimit(true);
-      } else {
-          if (newTopicsWArticles.topics.length > 0) {
-            setTopics((prevTopics) => [...(prevTopics || []), ...newTopicsWArticles.topics || []]);
-          }
-          setArticles(prevArticles => ({ ...prevArticles, ...newTopicsWArticles.articles }));
-          setShowArticle(prevShowArticle => ({
-            ...prevShowArticle,
-            ...Object.fromEntries(newTopicsWArticles.topics.map(topic => [topic.$id, true]))
-          }));
-          setAlignments(prevAlignments => ({
-            ...prevAlignments,
-            ...Object.fromEntries(newTopicsWArticles.topics.map(topic => [topic.$id, (newTopicsWArticles.articles as { [key: string]: any })[topic.$id]?.ArticleAlignment || 'l']))
-          }));
-          setAlignmentsCount(prevAlignmentsCount => ({
-            ...prevAlignmentsCount,
-            ...Object.fromEntries(newTopicsWArticles.topics.map(topic => [topic.$id, newTopicsWArticles.alignmentsCount[topic.$id]]))
-          }));
-      }
-      setPage(nextPage);
-      setLoading(false);
-      setShowProgress(false);
-  }
+    const newArticles = await getArticle(topicId, availableAlignments, alignment, 2, page);
 
-  useEffect(() => {
-      if (inView && !loading) {
-          console.log(`Loading more topics for page ${page + 1}`);
-          loadMoreTopics();
-      }
-  }, [inView, loading]);
+    if (!newArticles || newArticles.length === 0) {
+      setLimit(true);
+    } else {
+      setArticles(prevArticles => [...prevArticles, ...(Array.isArray(newArticles) ? newArticles : [newArticles])]);
+      setPage(prevPage => prevPage + 1);
+    }
 
-  const handleArticleChange = (topicId: string, newArticle: any, alignment: 'l' | 's' | 'k') => {
-    setShowArticle(prevShowArticle => ({
-      ...prevShowArticle,
-      [topicId]: false
-    }));
-    setTimeout(() => {
-      setArticles(prevArticles => ({
-        ...prevArticles,
-        [topicId]: newArticle
-      }));
-      setShowArticle(prevShowArticle => ({
-        ...prevShowArticle,
-        [topicId]: true
-      }));
-      setAlignments(prevAlignments => ({
-        ...prevAlignments,
-        [topicId]: alignment
-      }));
-    }, 500); // Delay to allow grow-out effect
+    setLoading(false);
+    setShowProgress(false);
   };
 
+  useEffect(() => {
+    if (inView && !loading && !limit) {
+      loadArticles();
+    }
+  }, [inView, loading, limit]);
+
+  const handleAlignmentChange = async (newAlignment: '' | 'l' | 's' | 'k') => {
+    setAlignment(newAlignment);
+    setArticles([]); // Clear current articles
+    setPage(0); // Reset pagination
+    setLimit(false); // Reset limit
+    await loadArticles(); // Load articles with the new alignment
+  };
 
   return (
-      <Stack spacing={2} sx={{ paddingTop: "11rem" }}>
-        {topics && topics.map((topic: { $id: string; TopicName: string; TopicCategory: string; TopicArticles: any[] }) => (
-          <Box key={topic.$id}>
-            <Grow in={true} timeout={500}>
-              <Box>
-                <TopicBar
-                  topic={topic}
-                  alignment={alignments[topic.$id]}
-                  onArticleChange={handleArticleChange}
-                  alignmentCounts={alignmentsCount[topic.$id]}
-                />
-              </Box>
-            </Grow>
-            <Grow in={showArticle[topic.$id]} timeout={500}>
-              <Box>
-                {articles && articles[topic.$id] && (
-                  <ArticleCardLg
-                    title={articles[topic.$id].ArticleTitle}
-                    image={articles[topic.$id].ArticleImage}
-                    date={articles[topic.$id].ArticleDate}
-                    sourceLink={articles[topic.$id].ArticleLink}
-                  />
-                )}
-              </Box>
-            </Grow>
+    <Stack spacing={2} sx={{ paddingTop: "11rem" }}>
+      <Box>
+        <TopicBarXl
+          topic={{ $id: topicId, TopicName: "Topic Name Placeholder", TopicCategory: "", TopicArticles: [] }}
+          alignment={alignment}
+          onArticleChange={(_, __, newAlignment) => handleAlignmentChange(newAlignment)}
+          alignmentCounts={alignmentCounts}
+        />
+      </Box>
+      {articles.map((article, index) => (
+        <Grow in={true} timeout={500} key={index}>
+          <Box>
+            <ArticleCardLg
+              title={article.ArticleTitle}
+              image={article.ArticleImage}
+              date={article.ArticleDate}
+              sourceLink={article.ArticleLink}
+            />
           </Box>
-        ))}
-        <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingTop: "3rem"
-        }}>
-            {showProgress && (
-                <CircularProgress/>
-            )}
-            <div ref={trigger} style={{ 
-              height: 10,
-              display: loading ? 'none' : 'block'
-            }} />
-        </Box> 
-        <Box sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingBottom: "3rem"
-        }}>
-          {limit && (
-            <Typography variant="h6">
-              Gratulujem, dosiahli ste koniec :)
-            </Typography>
-          )}
-        </Box>
-      </Stack>
+        </Grow>
+      ))}
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: "3rem"
+      }}>
+        {showProgress && (
+          <CircularProgress />
+        )}
+        <div ref={trigger} style={{
+          height: 10,
+          display: loading ? 'none' : 'block'
+        }} />
+      </Box>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: "3rem"
+      }}>
+        {limit && (
+          <Typography variant="h6">
+            Gratulujem, dosiahli ste koniec :)
+          </Typography>
+        )}
+      </Box>
+    </Stack>
   );
 }

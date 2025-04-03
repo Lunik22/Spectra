@@ -93,24 +93,7 @@ export async function getTopic(topic: string, alignment: 'l' | 's' | 'k' | '' = 
     )
     const topicsData = topicResponse.document
     console.log(topicsData);
-
-    const availableAlignments: { [key: string]: any } = {};
-    const articlesData: { [key: string]: any} = {};
-
-    
-    const availableAlignmentsResponse = await getAvailableAlignments(topic, timestamp);
-    console.log(`availableAlignmentsResponse for topic ${topic}:`, availableAlignmentsResponse);
-    if (availableAlignmentsResponse.l === 0 && availableAlignmentsResponse.s === 0 && availableAlignmentsResponse.k === 0) {
-      console.log(`No available alignments for topic ${topic}`);
-    } else {
-      console.log(`${availableAlignmentsResponse} available alignments for topic ${topic}`);
-      if (availableAlignmentsResponse) {
-        const articleResponse = await getArticle(topic, availableAlignmentsResponse, alignment, 3, offset);
-        if (articleResponse) {
-          articlesData[topic] = articleResponse;
-        }
-      }
-    }
+    return topicsData;
 
   } catch (error) {
     console.error(`Error retrieving topic ${topic}: ${error}`);

@@ -35,8 +35,13 @@ const sources: { [key: string]: { name: string; altImg: string; logo?: string; b
   "hnonline.sk": { "name": "Hospodárske Noviny", "altImg": "/imgs/altImgs/HospodarskeNovinyAlt.jpg", "logo": "/imgs/logos/HospodarskeNovinyLogo.jpg", "bias": "Konzervatívne" },
 };
 
-function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
+export default function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
   const theme = useTheme();
+
+  if (!sourceLink) {
+    console.error("Source link is undefined or null.");
+    return null; // Return early to avoid further errors
+  }
 
   const source = sourceLink.split("/")[2] as keyof typeof sources;
 
@@ -158,6 +163,8 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
               component="div"
               sx={{
                 color: 'text.primary',
+                fontSize: '1.75rem',
+                fontWeight: '700',
                 padding: '1rem 0 1rem 0',
                 WebkitTapHighlightColor: 'primary.main',
                 transition: '0.3s',
@@ -197,13 +204,3 @@ function ArticleCardLg({ title, image, date, sourceLink }: ArticleCardLgProps) {
   );
 }
 
-
-export default function ThemedArticleCardLg(props: ArticleCardLgProps) {
-  const source = props.sourceLink.split("/")[2] as keyof typeof sources;
-  const cardTheme = sources[source]?.bias === "Liberálne" ? worldTheme : sources[source]?.bias === "Stredové" ? defaultTheme : sources[source]?.bias === "Konzervatívne" ? slovakiaTheme : defaultTheme;
-  return (
-    <ThemeProvider theme={cardTheme}>
-      <ArticleCardLg {...props} />
-    </ThemeProvider>
-  );
-}
