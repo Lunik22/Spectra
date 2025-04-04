@@ -1,8 +1,8 @@
 "use client";
 
 import { Container, Fade } from '@mui/material';
-import Navbar from "../../components/navbar";
-import Menu from "../../components/menu";
+import Navbar from "../../../components/navbar";
+import Menu from "../../../components/menu";
 import Feed from '@/components/feed';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';

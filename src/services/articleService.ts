@@ -9,7 +9,6 @@ client
 
 const databases = new Databases(client);
 
-
 export async function getAvailableAlignments(topic: string, dateLimit: number = 86400) {
   const alignments: ('l' | 's' | 'k')[] = ['l', 's', 'k'];
   const availableAlignments: { 'l': number, 's': number, 'k': number } = { 'l': 0, 's': 0, 'k': 0 };
@@ -35,14 +34,22 @@ export async function getAvailableAlignments(topic: string, dateLimit: number = 
   }
   console.log(availableAlignments);
 
-  
-
   if (availableAlignments['l'] > 0 || availableAlignments['s'] > 0 || availableAlignments['k'] > 0) {
     return availableAlignments;
   } else {
     return { 'l': 0, 's': 0, 'k': 0 };
   }
+}
 
+export async function getRandomAlignment(availableAlignments: { 'l': number, 's': number, 'k': number }): Promise<'l' | 's' | 'k'> {
+  const validAlignments = (Object.keys(availableAlignments) as Array<keyof typeof availableAlignments>)
+    .filter(key => availableAlignments[key] > 0);
+
+  if (validAlignments.length === 0) {
+    return 'l'; // Default to 'l' if no valid alignments are available
+  }
+
+  return validAlignments[Math.floor(Math.random() * validAlignments.length)];
 }
 
 export async function getArticle(topic: string, availableAlignments: { 'l': number, 's': number, 'k': number }, alignment: 'l' | 's' | 'k' | '' = '', limit: number = 1, offset: number = 0, dateLimit: number = 86400) {

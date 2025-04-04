@@ -143,7 +143,6 @@ export default function TopicBar({ topic, alignment, onArticleChange, alignmentC
             py: '1rem',
             px: '2rem',
             borderRadius: '30px',
-            width: '50%',
             backdropFilter: 'blur(10px)', 
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             transform: 'translateX(15px)',

@@ -190,7 +190,7 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
           display: 'flex', 
           padding:'1rem', 
           width:'100%', 
-          height:"7rem", 
+          height:"7.5rem", 
           justifyContent: 'space-between',
           }}>
           <Box sx={{
@@ -200,7 +200,6 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
             py: '1rem',
             px: '2rem',
             borderRadius: '30px',
-            width: '40%',
             backdropFilter: 'blur(10px)', 
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             transform: 'translateX(15px)',
@@ -231,7 +230,9 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
               }
             }
             }}>
-            <Typography variant="h1" sx={{ color: theme.palette.text.primary, fontSize: '1.5rem', fontWeight: '700' }}>{topic.TopicName}</Typography>
+            <Typography variant="h1" sx={{ color: theme.palette.text.primary, fontSize: '1.5rem', fontWeight: '700' }}>
+              Téma {topic.TopicName}
+            </Typography>
             
           </Box>
           <Box sx={{

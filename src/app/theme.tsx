@@ -65,6 +65,10 @@ const defaultTheme = createTheme({
         fontWeight: 500,
         fontSize: '1.15rem',
       },
+      h4: {
+        fontWeight: 300,
+        fontSize: '1rem',
+      },
       body1: {
         fontWeight: 400,
       }
@@ -107,6 +111,10 @@ const slovakiaTheme = createTheme({
         fontWeight: 500,
         fontSize: '1.15rem',
       },
+      h4: {
+        fontWeight: 300,
+        fontSize: '1rem',
+      },
       body1: {
         fontWeight: 400,
       }
@@ -138,21 +146,25 @@ const worldTheme = createTheme({
   },
   typography: {
     fontFamily: ['Montserrat', 'sans-serif'].join(','),
-      h1: {
-        fontWeight: 700,
-        fontSize: '1.75rem',
-      },
-      h2: {
-        fontWeight: 700,
-        fontSize: '1rem',
-      },
-      h3: {
-        fontWeight: 500,
-        fontSize: '1.15rem',
-      },
-      body1: {
-        fontWeight: 400,
-      }
+    h1: {
+      fontWeight: 700,
+      fontSize: '1.75rem',
+    },
+    h2: {
+      fontWeight: 700,
+      fontSize: '1rem',
+    },
+    h3: {
+      fontWeight: 500,
+      fontSize: '1.15rem',
+    },
+    h4: {
+      fontWeight: 300,
+      fontSize: '1rem',
+    },
+    body1: {
+      fontWeight: 400,
+    }
   },
   custom: {
     logoPath: '/imgs/svet/SpectraLogo-svet.svg',
@@ -182,7 +194,8 @@ const economicsTheme = createTheme({
   typography: {
     fontFamily: ['Montserrat', 'sans-serif'].join(','),
     h1: {
-      fontWeight: 900,
+      fontWeight: 700,
+      fontSize: '1.75rem',
     },
     h2: {
       fontWeight: 700,
@@ -190,10 +203,14 @@ const economicsTheme = createTheme({
     },
     h3: {
       fontWeight: 500,
+      fontSize: '1.15rem',
+    },
+    h4: {
+      fontWeight: 300,
       fontSize: '1rem',
     },
     body1: {
-      fontWeight: 300,
+      fontWeight: 400,
     }
   },
   custom: {
@@ -223,7 +240,8 @@ const techTheme = createTheme({
   typography: {
     fontFamily: ['Montserrat', 'sans-serif'].join(','),
     h1: {
-      fontWeight: 900,
+      fontWeight: 700,
+      fontSize: '1.75rem',
     },
     h2: {
       fontWeight: 700,
@@ -231,10 +249,14 @@ const techTheme = createTheme({
     },
     h3: {
       fontWeight: 500,
+      fontSize: '1.15rem',
+    },
+    h4: {
+      fontWeight: 300,
       fontSize: '1rem',
     },
     body1: {
-      fontWeight: 300,
+      fontWeight: 400,
     }
   },
   custom: {
@@ -264,8 +286,8 @@ const sportTheme = createTheme({
   typography: {
     fontFamily: ['Montserrat', 'sans-serif'].join(','),
     h1: {
-      fontWeight: 900,
-      fontSize: '2rem',
+      fontWeight: 700,
+      fontSize: '1.75rem',
     },
     h2: {
       fontWeight: 700,
@@ -273,10 +295,14 @@ const sportTheme = createTheme({
     },
     h3: {
       fontWeight: 500,
+      fontSize: '1.15rem',
+    },
+    h4: {
+      fontWeight: 300,
       fontSize: '1rem',
     },
     body1: {
-      fontWeight: 300,
+      fontWeight: 400,
     }
   },
   custom: {
@@ -306,7 +332,8 @@ const localTheme = createTheme({
   typography: {
     fontFamily: ['Montserrat', 'sans-serif'].join(','),
     h1: {
-      fontWeight: 900,
+      fontWeight: 700,
+      fontSize: '1.75rem',
     },
     h2: {
       fontWeight: 700,
@@ -314,10 +341,14 @@ const localTheme = createTheme({
     },
     h3: {
       fontWeight: 500,
+      fontSize: '1.15rem',
+    },
+    h4: {
+      fontWeight: 300,
       fontSize: '1rem',
     },
     body1: {
-      fontWeight: 300,
+      fontWeight: 400,
     }
   },
   custom: {
@@ -347,7 +378,8 @@ const cultureTheme = createTheme({
   typography: {
     fontFamily: ['Montserrat', 'sans-serif'].join(','),
     h1: {
-      fontWeight: 900,
+      fontWeight: 700,
+      fontSize: '1.75rem',
     },
     h2: {
       fontWeight: 700,
@@ -355,10 +387,14 @@ const cultureTheme = createTheme({
     },
     h3: {
       fontWeight: 500,
+      fontSize: '1.15rem',
+    },
+    h4: {
+      fontWeight: 300,
       fontSize: '1rem',
     },
     body1: {
-      fontWeight: 300,
+      fontWeight: 400,
     }
   },
   custom: {

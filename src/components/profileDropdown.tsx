@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
-import { getAvatarURL, getLoggedInUser } from '@/appwrite/authService';
+import { getAvatarURL, getLoggedInUser, signOut } from '@/appwrite/authService';
 import { cultureTheme } from '@/app/theme';
 import { useTheme } from '@mui/material';
 import { User } from '@/types';
@@ -35,6 +35,15 @@ export default function ProfileDropdown() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(); // Call the logout function
+      window.location.reload(); // Reload the page to reflect the logout state
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (
@@ -97,7 +106,7 @@ export default function ProfileDropdown() {
       >
         <MenuItem onClick={handleClose}>Môj profil: {user?.name}</MenuItem>
         <MenuItem onClick={handleClose}>Uložené články</MenuItem>
-        <MenuItem onClick={handleClose} sx={{ color: cultureTheme.palette.primary.main }}>Odhlásiť sa</MenuItem>
+        <MenuItem onClick={handleLogout} sx={{ color: cultureTheme.palette.primary.main }}>Odhlásiť sa</MenuItem>
       </Menu>
     </Box>
   );

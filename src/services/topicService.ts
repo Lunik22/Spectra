@@ -2,7 +2,7 @@
 
 import { Client, Databases, Query } from "appwrite"; // Adjust the import based on your project structure
 import { Topic } from "@/types";
-import { getAvailableAlignments, getArticle } from "./articleService";
+import { getAvailableAlignments, getArticle, getRandomAlignment } from "./articleService";
 
 const client = new Client();
 client
@@ -11,12 +11,11 @@ client
 
 const databases = new Databases(client);
 
-
 export async function getTopics(offset = 0, category: string) {
   const timestamp = Math.floor(Date.now() / 1000);
   try {
     let topicResponse;
-    if (category == '0'){
+    if (category == '0') {
       topicResponse = await databases.listDocuments(
         '66e992ad00337f2887d0',
         '673995d50003db697576',
@@ -52,14 +51,14 @@ export async function getTopics(offset = 0, category: string) {
 
     const availableAlignments: { [key: string]: { l: number; s: number; k: number } } = {};
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const articlesData: { [key: string]: any} = {};
+    const articlesData: { [key: string]: any } = {};
     const topicsDataClean = [] as Topic[];
+    const alignments: { [key: string]: 'l' | 's' | 'k' } = {};
 
     for (const topic of topicsData) {
       console.log(topic.$id);
       const availableAlignmentsResponse = await getAvailableAlignments(topic.$id);
       console.log(`availableAlignmentsResponse for topic ${topic.$id}:`, availableAlignmentsResponse);
-
 
       if (availableAlignmentsResponse.l === 0 && availableAlignmentsResponse.s === 0 && availableAlignmentsResponse.k === 0) {
         console.log(`No available alignments for topic ${topic.$id}`);
@@ -67,8 +66,12 @@ export async function getTopics(offset = 0, category: string) {
         topicsDataClean.push(topic);
         availableAlignments[topic.$id] = availableAlignmentsResponse;
         console.log(`${availableAlignmentsResponse} available alignments for topic ${topic.$id}`);
+
+        const randomAlignment = await getRandomAlignment(availableAlignmentsResponse);
+        alignments[topic.$id] = randomAlignment;
+
         if (availableAlignmentsResponse) {
-          const articleResponse = await getArticle(topic.$id, availableAlignmentsResponse);
+          const articleResponse = await getArticle(topic.$id, availableAlignmentsResponse, randomAlignment);
           if (articleResponse) {
             articlesData[topic.$id] = articleResponse;
           }
@@ -76,7 +79,7 @@ export async function getTopics(offset = 0, category: string) {
       }
     }
 
-    return { topics: topicsDataClean, articles: articlesData, alignmentsCount: availableAlignments };
+    return { topics: topicsDataClean, articles: articlesData, alignmentsCount: availableAlignments, alignments };
   } catch (error) {
     console.error(`Error retrieving topics collection: ${error}`);
     return null;

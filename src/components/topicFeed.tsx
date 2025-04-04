@@ -2,13 +2,13 @@
 
 import { Box, CircularProgress, Grow, Stack, Typography } from "@mui/material";
 import TopicBarXl from "./topicBarXl";
-import ArticleCardLg from "./articleCardLg";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { getArticle, getAvailableAlignments } from "@/services/articleService";
 import { usePathname } from "next/navigation";
 import { getTopic } from "@/services/topicService";
 import { Article } from "@/types";
+import ArticleCardXl from "./articleCardXl";
 
 function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -47,7 +47,7 @@ export default function TopicFeed() {
     console.log(`New Page ${nextPage}`);
 
     const result = await getArticle(topicId, availableAlignments, alignment, 1, nextPage, timestamp);
-    const newArticle = result && typeof result === 'object' && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' in result
+    const newArticle = result && typeof result === 'object' && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' && 'ArticlePayWall' && 'ArticleAuthors' && 'ArticlePreview' && 'ArticleTopics' && 'ArticleReliability' && 'ArticleType' && 'ArticleLanguage' in result
       ? (result as unknown as Article)
       : null;
 
@@ -96,7 +96,7 @@ export default function TopicFeed() {
   
       // Load the first page of articles for the new alignment
       const result = await getArticle(topicId, availableAlignments, newAlignment, 1, 0, timestamp);
-      const newArticle = result && typeof result === 'object' && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' in result
+      const newArticle = result && typeof result === 'object' && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' && 'ArticlePayWall' && 'ArticleAuthors' && 'ArticlePreview' && 'ArticleTopics' && 'ArticleReliability' && 'ArticleType' && 'ArticleLanguage' in result
         ? (result as unknown as Article)
         : null;
   
@@ -119,11 +119,18 @@ export default function TopicFeed() {
       {articles.map((article, index) => (
         <Grow in={true} timeout={500} key={index}>
           <Box>
-            <ArticleCardLg
+            <ArticleCardXl
               title={article.ArticleTitle}
               image={article.ArticleImage}
               date={article.ArticleDate}
               sourceLink={article.ArticleLink}
+              paywall={article.ArticlePaywall}
+              authors={article.ArticleAuthors}
+              preview={article.ArticlePreview}
+              topics={article.ArticleTopics}
+              reliability={article.ArticleReliability}
+              type={article.ArticleType}
+              language={article.ArticleLanguage}
             />
           </Box>
         </Grow>

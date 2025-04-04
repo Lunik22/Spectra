@@ -21,10 +21,6 @@ const subdomainToCategoryMap: { [key: string]: string } = {
   "kultura-a-zabava": "7"
 };
 
-function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 export default function Feed() {
   const [topics, setTopics] = useState<Topic[]>();
   const [articles, setArticles] = useState<{ [key: string]: { ArticleTitle: string; ArticleImage: string; ArticleDate: string; ArticleLink: string; ArticleAlignment?: 'l' | 's' | 'k' } }>();
@@ -54,7 +50,6 @@ export default function Feed() {
       setShowProgress(false);
       setTimeout(() => setShowProgress(true), 250); // Delay the appearance of CircularProgress by 500ms
 
-      await delay(250);
 
       const nextPage = page + 1;
       
@@ -68,16 +63,17 @@ export default function Feed() {
           }
           for (const articleId in newTopicsWArticles.articles) {
             if (shownArticles.includes(articleId)) {
-              const alignmentCount = newTopicsWArticles.alignmentsCount[articleId];
+              const alignmentCount = (newTopicsWArticles.alignmentsCount as { [key: string]: { l: number; s: number; k: number; } })[articleId];
               if (alignmentCount && Object.values(alignmentCount as { [key: string]: number }).reduce((a, b) => a + b, 0) >= 2) {
                 const newArticle = await getArticle(
                   newTopicsWArticles.topics.find(topic => topic.$id === articleId)?.$id ?? '',
                   alignmentCount,
-                  newTopicsWArticles.articles[articleId].ArticleAlignment,
+                  (newTopicsWArticles.articles as { [key: string]: { ArticleAlignment?: 'l' | 's' | 'k' } })[articleId]?.ArticleAlignment,
                   1, // Offset of +1
                   1
                 );
-                newTopicsWArticles.articles[articleId] = newArticle;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (newTopicsWArticles.articles as { [key: string]: any })[articleId] = newArticle;
               }
             } else {
               setShownArticles(prev => [...prev, articleId]);
@@ -94,7 +90,7 @@ export default function Feed() {
           }));
           setAlignmentsCount(prevAlignmentsCount => ({
             ...prevAlignmentsCount,
-            ...Object.fromEntries(newTopicsWArticles.topics.map(topic => [topic.$id, newTopicsWArticles.alignmentsCount[topic.$id]]))
+            ...Object.fromEntries(newTopicsWArticles.topics.map(topic => [topic.$id, (newTopicsWArticles.alignmentsCount as { [key: string]: { l: number; s: number; k: number; } })[topic.$id]]))
           }));
       }
       setPage(nextPage);

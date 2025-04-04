@@ -80,3 +80,18 @@ export async function getAvatarURL() {
     );
     return await result;
 }
+
+export async function signOut() {
+  try {
+    const sessionClient = await createSessionClient();
+    if (!sessionClient) {
+      throw new Error("No active session found.");
+    }
+    const { account } = sessionClient;
+    await account.deleteSession('current'); // Delete the current session
+    cookies().delete("my-custom-session"); // Clear the session cookie
+  } catch (error) {
+    console.error("Error during logout:", error);
+    throw error;
+  }
+}
