@@ -1,6 +1,5 @@
 "use server";
 
-import { cardActionsClasses } from "@mui/material";
 import { Client, Databases, Query } from "appwrite"; // Adjust the import based on your project structure
 
 const client = new Client();
@@ -18,13 +17,14 @@ export async function getAvailableAlignments(topic: string, dateLimit: number = 
   timestamp += 7200
   console.log(`Timestamp: ${timestamp}`);
   for (const alignment of alignments) {
-    let response = await databases.listDocuments(
+    const response = await databases.listDocuments(
       '66e992ad00337f2887d0',
       '66e992d00033deaab869',
       [
         Query.contains('ArticleTopics', [topic]),
         Query.contains('ArticleAlignment', [alignment]),
         Query.greaterThanEqual('ArticleDate', timestamp - dateLimit),
+        Query.limit(10000),
       ]
     );
 
@@ -47,7 +47,7 @@ export async function getAvailableAlignments(topic: string, dateLimit: number = 
 
 export async function getArticle(topic: string, availableAlignments: { 'l': number, 's': number, 'k': number }, alignment: 'l' | 's' | 'k' | '' = '', limit: number = 1, offset: number = 0, dateLimit: number = 86400) {
   const alignments = [];
-  let timestamp = Math.floor(Date.now() / 1000);
+  const timestamp = Math.floor(Date.now() / 1000);
   for (const alignment of Object.keys(availableAlignments) as Array<'l' | 's' | 'k'>) {
     if (availableAlignments[alignment] > 0) {
       alignments.push(alignment);
@@ -69,38 +69,38 @@ export async function getArticle(topic: string, availableAlignments: { 'l': numb
   }
   
   try {
-    let response;
-    if(alignment == ''){
-      response = await databases.listDocuments(
-        '66e992ad00337f2887d0',
-        '66e992d00033deaab869',
-        [
-          Query.contains('ArticleTopics', [topic]),
-          Query.limit(limit),
-          Query.greaterThanEqual('ArticleDate', timestamp - dateLimit),
-          Query.orderDesc('ArticleDate'),
-          Query.offset(offset),
-        ]
-      );
-    }else{
-      const response = await databases.listDocuments(
-        '66e992ad00337f2887d0',
-        '66e992d00033deaab869',
-        [
-          Query.contains('ArticleTopics', [topic]),
-          Query.limit(limit),
-          Query.contains('ArticleAlignment', [alignmentLocal]),
-          Query.greaterThanEqual('ArticleDate', timestamp - dateLimit),
-          Query.orderDesc('ArticleDate'),
-          Query.offset(offset),
-        ]
-      );
-    }
-    if (response.documents.length > 0) {
+  let response;
+  if(alignment == ''){
+    response = await databases.listDocuments(
+      '66e992ad00337f2887d0',
+      '66e992d00033deaab869',
+      [
+        Query.contains('ArticleTopics', [topic]),
+        Query.limit(limit),
+        Query.greaterThanEqual('ArticleDate', timestamp - dateLimit),
+        Query.orderDesc('ArticleDate'),
+        Query.offset(offset),
+      ]
+    );
+  }else{
+    response = await databases.listDocuments(
+      '66e992ad00337f2887d0',
+      '66e992d00033deaab869',
+      [
+        Query.contains('ArticleTopics', [topic]),
+        Query.limit(limit),
+        Query.contains('ArticleAlignment', [alignmentLocal]),
+        Query.greaterThanEqual('ArticleDate', timestamp - dateLimit),
+        Query.orderDesc('ArticleDate'),
+        Query.offset(offset),
+      ]
+    );
+  }
+  if (response && response.documents.length > 0) {
       console.log(response.documents[0]);
       return response.documents[0]
     } else {
-      return {};
+      return null;
     }
   } catch (error) {
     console.error(`Error retrieving newest article: ${error}`);

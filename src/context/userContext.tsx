@@ -30,13 +30,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           if (loggedInUser) {
             const avatarResponse = await getAvatarURL();
-            const avatarBase64 = Buffer.from(await avatarResponse).toString('base64');
-            const avatarData = `data:image/png;base64,${avatarBase64}`;
-            setAvatar(avatarData);
+            if (avatarResponse) {
+              const avatarBase64 = Buffer.from(avatarResponse).toString('base64');
+              const avatarData = `data:image/png;base64,${avatarBase64}`;
+              setAvatar(avatarData);
+              Cookies.set('avatar', avatarData, { expires: 7 });
+            } else {
+              setAvatar(null);
+            }
 
-            // Store user and avatar data in cookies
+            // Store user data in cookies
             Cookies.set('user', JSON.stringify(loggedInUser), { expires: 7 });
-            Cookies.set('avatar', avatarData, { expires: 7 });
           } else {
             setAvatar(null);
           }

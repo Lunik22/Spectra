@@ -1,15 +1,14 @@
 "use client";
 
-import { Article, Topic } from "@/types";
+import { Topic } from "@/types";
 import { Box, CircularProgress, Grow, Stack, Typography } from "@mui/material";
 import TopicBar from "./topicBar";
 import ArticleCardLg from "./articleCardLg";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { getTopics } from "@/services/topicService";
-import { getArticle, getAvailableAlignments } from "@/services/articleService";
+import { getArticle } from "@/services/articleService";
 import { usePathname } from "next/navigation";
-import { set } from "date-fns";
 
 const subdomainToCategoryMap: { [key: string]: string } = {
   "": "0",
@@ -28,7 +27,7 @@ function delay(ms: number) {
 
 export default function Feed() {
   const [topics, setTopics] = useState<Topic[]>();
-  const [articles, setArticles] = useState<{ [key: string]: any }>();
+  const [articles, setArticles] = useState<{ [key: string]: { ArticleTitle: string; ArticleImage: string; ArticleDate: string; ArticleLink: string; ArticleAlignment?: 'l' | 's' | 'k' } }>();
   const [page, setPage] = useState(-1);
   const [loading, setLoading] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
@@ -91,7 +90,7 @@ export default function Feed() {
           }));
           setAlignments(prevAlignments => ({
             ...prevAlignments,
-            ...Object.fromEntries(newTopicsWArticles.topics.map(topic => [topic.$id, (newTopicsWArticles.articles as { [key: string]: any })[topic.$id]?.ArticleAlignment || 'l']))
+            ...Object.fromEntries(newTopicsWArticles.topics.map(topic => [topic.$id, (newTopicsWArticles.articles as { [key: string]: { ArticleAlignment?: 'l' | 's' | 'k' } })[topic.$id]?.ArticleAlignment || 'l']))
           }));
           setAlignmentsCount(prevAlignmentsCount => ({
             ...prevAlignmentsCount,
@@ -110,7 +109,7 @@ export default function Feed() {
       }
   }, [inView, loading]);
 
-  const handleArticleChange = async (topicId: string, newArticle: any, alignment: 'l' | 's' | 'k') => {
+  const handleArticleChange = async (topicId: string, newArticle: { ArticleTitle: string; ArticleImage: string; ArticleDate: string; ArticleLink: string }, alignment: 'l' | 's' | 'k') => {
     setShowArticle(prevShowArticle => ({
       ...prevShowArticle,
       [topicId]: false // Hide the current article for the grow-out effect
@@ -137,7 +136,7 @@ export default function Feed() {
 
   return (
       <Stack spacing={2} sx={{ paddingTop: "11rem" }}>
-        {topics && topics.map((topic: { $id: string; TopicName: string; TopicCategory: string; TopicArticles: any[] }) => (
+        {topics && topics.map((topic: { $id: string; TopicName: string; TopicCategory: string; TopicArticles: string[] }) => (
           <Box key={topic.$id}>
             <Grow in={true} timeout={500}>
               <Box>
@@ -185,7 +184,7 @@ export default function Feed() {
         }}>
           {limit && (
             <Typography variant="h6">
-              Gratulujem, dosiahli ste koniec :)
+              Gratulujem, dosiahli ste koniec! Teraz sa prosím choďte dotknúť trávy :)
             </Typography>
           )}
         </Box>

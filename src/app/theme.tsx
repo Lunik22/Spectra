@@ -1,7 +1,5 @@
 'use client';
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import localFont from 'next/font/local';
-import { Montserrat } from 'next/font/google';
+import { createTheme } from "@mui/material/styles";
 
 
 

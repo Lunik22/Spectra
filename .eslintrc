@@ -1,11 +1,17 @@
 {
-    "rules": {
-      "react/react-in-jsx-scope": "off"
-    },
-    "parserOptions": {
+  "parser": "@typescript-eslint/parser", // Use the TypeScript parser
+  "plugins": ["@typescript-eslint"], // Add the TypeScript plugin
+  "extends": [
+    "eslint:recommended", // Base ESLint rules
+    "plugin:@typescript-eslint/recommended" // TypeScript-specific rules
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": "off" // Disable React in JSX scope rule for React 17+
+  },
+  "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2020
-   },
+  },
   "env": {
     "es6": true,
     "node": true

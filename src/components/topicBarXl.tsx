@@ -5,9 +5,7 @@ import { defaultTheme, slovakiaTheme, worldTheme } from '../app/theme';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { getArticle } from '@/services/articleService';
 import { Topic } from '@/types';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 interface TopicBarProps {
@@ -57,61 +55,121 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
         themePalette = defaultTheme.palette;
       }
 
-      return {
-        borderRadius: '30px',
-        py: '0.5rem',
-        px: '1rem',
-        color: themePalette.text.primary,
-        transition: 'color 0.3s, background 0.3s',
-        '&::before': {
+      if (value !== ''){
+        return {
+          borderRadius: '30px',
+          py: '0.5rem',
+          px: '1rem',
+          color: themePalette.text.primary,
+          transition: 'color 0.3s, background 0.3s',
+          '&::before': {
+                content: '""',
+                position: 'absolute',
+                background: disabled ? 'grey' : `radial-gradient(${themePalette.primary.main}, ${themePalette.primary.dark})`,
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                opacity: 0.8, 
+                zIndex: -1,
+                borderRadius: '30px',
+                transition: '0.3s',
+          },
+          ":hover": {
+            transition: 'color 0.3s, background 0.3s',
+            borderRadius: '30px',
+            '&::before': {
               content: '""',
               position: 'absolute',
-              background: disabled ? 'grey' : `radial-gradient(${themePalette.primary.main}, ${themePalette.primary.dark})`,
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              opacity: 0.8, 
+              opacity: 1, 
               zIndex: -1,
-              borderRadius: '30px',
-              transition: '0.3s',
-        },
-        ":hover": {
-          transition: 'color 0.3s, background 0.3s',
-          borderRadius: '30px',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1, 
-            zIndex: -1,
-            borderRadius: '30px'
-          }
-        },
-        "&.Mui-selected": {
-          color: themePalette.primary.main,
-          borderRadius: '30px',
-          background: disabled ? 'grey' : `${themePalette.text.primary}`,
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1, 
-            zIndex: -1,
-            borderRadius: '30px'
+              borderRadius: '30px'
+            }
           },
-          ":hover": {
+          "&.Mui-selected": {
+            color: themePalette.primary.main,
             borderRadius: '30px',
             background: disabled ? 'grey' : `${themePalette.text.primary}`,
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              opacity: 1, 
+              zIndex: -1,
+              borderRadius: '30px'
+            },
+            ":hover": {
+              borderRadius: '30px',
+              background: disabled ? 'grey' : `${themePalette.text.primary}`,
+            }
           }
         }
-      };
+      } else {
+        return {
+          borderRadius: '30px',
+          py: '0.5rem',
+          px: '1rem',
+          color: themePalette.text.primary,
+          transition: 'color 0.3s, background 0.3s',
+          '&::before': {
+                content: '""',
+                position: 'absolute',
+                background: disabled ? 'grey' : `linear-gradient(90deg, ${themePalette.primary.left}, ${themePalette.primary.main}, ${themePalette.primary.right})`,
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                opacity: 0.8, 
+                zIndex: -1,
+                borderRadius: '30px',
+                transition: '0.3s',
+          },
+          ":hover": {
+            transition: 'color 0.3s, background 0.3s',
+            borderRadius: '30px',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              opacity: 1, 
+              zIndex: -1,
+              borderRadius: '30px'
+            }
+          },
+          "&.Mui-selected": {
+            color: themePalette.primary.main,
+            borderRadius: '30px',
+            background: disabled ? 'grey' : `${themePalette.text.primary}`,
+            
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              opacity: 1, 
+              zIndex: -1,
+              borderRadius: '30px'
+            },
+            ":hover": {
+              borderRadius: '30px',
+              background: disabled ? 'grey' : `${themePalette.text.primary}`,
+            }
+          }
+        }
+      }
+      
     };
 
     const hostname = usePathname();
@@ -132,7 +190,7 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
           display: 'flex', 
           padding:'1rem', 
           width:'100%', 
-          height:"5rem", 
+          height:"7rem", 
           justifyContent: 'space-between',
           }}>
           <Box sx={{
@@ -173,9 +231,8 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
               }
             }
             }}>
-            <Link href={`/tema/${category}/${topic.$id}`} passHref>
-              <Typography variant="h2" sx={{ color: theme.palette.text.primary }}>{topic.TopicName}</Typography>
-            </Link>
+            <Typography variant="h1" sx={{ color: theme.palette.text.primary, fontSize: '1.5rem', fontWeight: '700' }}>{topic.TopicName}</Typography>
+            
           </Box>
           <Box sx={{
             display: 'flex',
@@ -195,23 +252,44 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
               }}
             >
               <ToggleButton value='' aria-label='' sx={getButtonStyles('', (alignmentCounts['l'] + alignmentCounts['s'] + alignmentCounts['k']) === 0)} disabled={(alignmentCounts['l'] + alignmentCounts['s'] + alignmentCounts['k']) === 0}>
-                {(alignmentCounts['l'] + alignmentCounts['s'] + alignmentCounts['k'])} {articleName((alignmentCounts['l'] + alignmentCounts['s'] + alignmentCounts['k']))}
+                {currentAlignment === '' 
+                  ? `Všetky zdroje`
+                  : `${(alignmentCounts['l'] + alignmentCounts['s'] + alignmentCounts['k'])} ${articleName((alignmentCounts['l'] + alignmentCounts['s'] + alignmentCounts['k']))}`}
               </ToggleButton>
-              <ToggleButton value='l' aria-label='l' sx={getButtonStyles('l', alignmentCounts['l'] === 0)} disabled={alignmentCounts['l'] === 0}>
-                {alignmentCounts['l']} {articleName(alignmentCounts['l'])}
-              </ToggleButton>
-              <ToggleButton value='s' aria-label='s' sx={getButtonStyles('s', alignmentCounts['s'] === 0)} disabled={alignmentCounts['s'] === 0}>
-                {alignmentCounts['s']} {articleName(alignmentCounts['s'])}
-              </ToggleButton>
-              <ToggleButton value='k' aria-label='k' sx={getButtonStyles('k', alignmentCounts['k'] === 0)} disabled={alignmentCounts['k'] === 0}>
-                {alignmentCounts['k']} {articleName(alignmentCounts['k'])}
-              </ToggleButton>
+              <ToggleButton
+                  value='l'
+                  aria-label='l'
+                  sx={getButtonStyles('l', alignmentCounts['l'] <= 0)} // Ensure button is only disabled if count is 0 or less
+                  disabled={alignmentCounts['l'] <= 0}
+                >
+                  {currentAlignment === 'l'
+                    ? `Liberálne zdroje`
+                    : `${alignmentCounts['l']} ${articleName(alignmentCounts['l'])}`}
+                </ToggleButton>
+                <ToggleButton
+                  value='s'
+                  aria-label='s'
+                  sx={getButtonStyles('s', alignmentCounts['s'] <= 0)} // Ensure button is only disabled if count is 0 or less
+                  disabled={alignmentCounts['s'] <= 0}
+                >
+                  {currentAlignment === 's'
+                    ? `Stredové zdroje`
+                    : `${alignmentCounts['s']} ${articleName(alignmentCounts['s'])}`}
+                </ToggleButton>
+                <ToggleButton
+                  value='k'
+                  aria-label='k'
+                  sx={getButtonStyles('k', alignmentCounts['k'] <= 0)} // Ensure button is only disabled if count is 0 or less
+                  disabled={alignmentCounts['k'] <= 0}
+                >
+                  {currentAlignment === 'k'
+                    ? `Konzervatívne zdroje`
+                    : `${alignmentCounts['k']} ${articleName(alignmentCounts['k'])}`}
+                </ToggleButton>
             </ToggleButtonGroup>
           </Box>
         </Box>
       );
-    } else{
-      
     }
     
 }

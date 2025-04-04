@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useTheme, ThemeProvider } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { defaultTheme, slovakiaTheme, worldTheme} from '../app/theme';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -120,65 +120,65 @@ export default function ArticleCardLg({ title, image, date, sourceLink }: Articl
             height: '100%'
           }}>
             <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', width: '75%'}}>
-                <CardMedia
-                    component="img"
-                    sx={{ width: '2rem', marginRight: '1rem', borderRadius: '25%' }}
-                    image={sources[source]["logo"]}
-                    alt="Img"
-                />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', width: '75%'}}>
+                  <CardMedia
+                      component="img"
+                      sx={{ width: '2rem', marginRight: '1rem', borderRadius: '25%' }}
+                      image={sources[source]["logo"]}
+                      alt="Img"
+                  />
+                  <Typography 
+                    component="div" 
+                    variant="h3"
+                    sx={{
+                      color: appliedTheme.palette.text.primary,
+                      WebkitTapHighlightColor: appliedTheme.palette.primary.main,
+                      '&::selection': {
+                        backgroundColor: appliedTheme.palette.text.primary,
+                        color: appliedTheme.palette.primary.dark,
+                      },
+                  }}>
+                    {sources[source]["name"]}
+                  </Typography>
+                </Box>
                 <Typography 
                   component="div" 
                   variant="h3"
                   sx={{
-                    color: 'text.primary',
-                    WebkitTapHighlightColor: 'primary.main',
+                    color: appliedTheme.palette.text.primary,
+                    WebkitTapHighlightColor: appliedTheme.palette.primary.main,
+                    width: '100%',
                     '&::selection': {
                       backgroundColor: appliedTheme.palette.text.primary,
                       color: appliedTheme.palette.primary.dark,
                     },
-                }}>
-                  {sources[source]["name"]}
+                    textAlign: 'right'
+                  }}>
+                  {formattedDate}
                 </Typography>
               </Box>
-              <Typography 
-                component="div" 
-                variant="h3"
+              <Typography
+                variant="h1"
+                component="div"
                 sx={{
-                  color: 'text.primary',
-                  WebkitTapHighlightColor: 'primary.main',
-                  width: '100%',
-                  '&::selection': {
-                    backgroundColor: appliedTheme.palette.text.primary,
-                    color: appliedTheme.palette.primary.dark,
-                  },
-                  textAlign: 'right'
-                }}>
-                {formattedDate}
+                  color: appliedTheme.palette.text.primary,
+                  fontSize: '1.75rem',
+                  fontWeight: '700',
+                  padding: '1rem 0 1rem 0',
+                  WebkitTapHighlightColor: appliedTheme.palette.primary.main,
+                  transition: '0.3s',
+                  ':hover': {
+                    color: appliedTheme.palette.primary.main,
+                    transition: '0.3s',
+                  }
+                }}
+              >
+                <Link href={sourceLink} passHref>
+                  {title}
+                </Link>
               </Typography>
             </Box>
-            <Typography
-              variant="h1"
-              component="div"
-              sx={{
-                color: 'text.primary',
-                fontSize: '1.75rem',
-                fontWeight: '700',
-                padding: '1rem 0 1rem 0',
-                WebkitTapHighlightColor: 'primary.main',
-                transition: '0.3s',
-                ':hover': {
-                  color: appliedTheme.palette.primary.main,
-                  transition: '0.3s',
-                }
-              }}
-            >
-              <Link href={sourceLink} passHref>
-                {title}
-              </Link>
-            </Typography>
-          </Box>
           </Box>
         </CardContent>
       </Box>

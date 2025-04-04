@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function signUpWithEmail(formData: FormData) {
     const email = formData.get("email") as string | null;
     const password = formData.get("password") as string | null;

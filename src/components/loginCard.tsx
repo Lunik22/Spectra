@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
-import { Box, Button, Card, CardContent, Typography, InputBase, styled, alpha } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Box, Button, Card, CardContent, Typography, InputBase, styled } from '@mui/material';
 import { getAvatarURL, getLoggedInUser, signInWithEmail } from '@/appwrite/authService';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/context/useAuth';
@@ -22,7 +21,6 @@ const CustomInput = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function LoginCard() {
-  const theme = useTheme();
   const router = useRouter();
   const { setAuthStatus } = useAuth();
   const [formData, setFormData] = React.useState({ email: '', password: '' });
@@ -56,8 +54,12 @@ export default function LoginCard() {
 
       setAuthStatus(true);
       router.push('/');
-    } catch (error: any) {
-      setError(error.message || 'Login failed');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || 'Login failed');
+      } else {
+        setError('Login failed');
+      }
     }
   };
 

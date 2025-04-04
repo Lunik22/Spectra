@@ -8,7 +8,6 @@ import { useInView } from "react-intersection-observer";
 import { getArticle, getAvailableAlignments } from "@/services/articleService";
 import { usePathname } from "next/navigation";
 import { getTopic } from "@/services/topicService";
-import next from "next";
 import { Article } from "@/types";
 
 function delay(ms: number) {
@@ -44,11 +43,13 @@ export default function TopicFeed() {
     const timestamp = Math.floor(Date.now() / 1000);
     const availableAlignments = await getAvailableAlignments(topicId, timestamp);
     setAlignmentCounts(availableAlignments);
-    console.log(alignment)
-    console.log(nextPage)
+    console.log(`Alignment ${alignment}`);
+    console.log(`New Page ${nextPage}`);
 
-    const newArticle = await getArticle(topicId, availableAlignments, alignment, 1, nextPage, timestamp) as Article;
-    
+    const result = await getArticle(topicId, availableAlignments, alignment, 1, nextPage, timestamp);
+    const newArticle = result && typeof result === 'object' && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' in result
+      ? (result as unknown as Article)
+      : null;
 
     const topic = await getTopic(topicId);
     if (topic) {
@@ -58,7 +59,13 @@ export default function TopicFeed() {
     if (!newArticle) {
       setLimit(true);
     } else {
-      setArticles(prevArticles => [...prevArticles, newArticle]);
+      setArticles(prevArticles => {
+        // Avoid adding duplicate articles
+        if (prevArticles.some(article => article.ArticleLink === newArticle.ArticleLink)) {
+          return prevArticles;
+        }
+        return [...prevArticles, newArticle];
+      });
     }
 
     setPage(nextPage);
@@ -73,12 +80,30 @@ export default function TopicFeed() {
   }, [inView, loading, limit]);
 
   const handleAlignmentChange = async (newAlignment: '' | 'l' | 's' | 'k') => {
+    if (alignment === newAlignment) return; // Avoid reloading if the same alignment is selected
+  
     setAlignment(newAlignment);
-    console.log(`Selected alignment: ${newAlignment}`);
-    setArticles([]); // Clear current articles
-    setPage(0); // Reset pagination
-    setLimit(false); // Reset limit
-    await loadArticles(); // Load articles with the new alignment
+  
+    // Fade-out effect
+    setArticles([]);
+    setTimeout(async () => {
+      setPage(-1); // Reset pagination
+      setLimit(false); // Reset limit
+  
+      const timestamp = Math.floor(Date.now() / 1000);
+      const availableAlignments = await getAvailableAlignments(topicId, timestamp);
+      setAlignmentCounts(availableAlignments);
+  
+      // Load the first page of articles for the new alignment
+      const result = await getArticle(topicId, availableAlignments, newAlignment, 1, 0, timestamp);
+      const newArticle = result && typeof result === 'object' && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' in result
+        ? (result as unknown as Article)
+        : null;
+  
+      if (newArticle) {
+        setArticles([newArticle]); // Fade-in effect
+      }
+    }, 500); // Delay to allow fade-out effect
   };
 
   return (
@@ -125,7 +150,7 @@ export default function TopicFeed() {
       }}>
         {limit && (
           <Typography variant="h6">
-            Gratulujem, dosiahli ste koniec :)
+            Gratulujem, dosiahli ste koniec! Teraz sa prosím choďte dotknúť trávy :)
           </Typography>
         )}
       </Box>

@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Container, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import LoginButton from './loginButton';
 import SearchBar from './searchBar';
@@ -10,6 +10,7 @@ import ProfileDropdown from './profileDropdown';
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [avatar, setAvatar] = useState<string | null>(null);
   
 

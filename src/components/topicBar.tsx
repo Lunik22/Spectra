@@ -13,6 +13,7 @@ import { usePathname } from 'next/navigation';
 interface TopicBarProps {
   topic: Topic;
   alignment: 'l' | 's' | 'k';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onArticleChange: (topicId: string, newArticle: any, alignment: 'l' | 's' | 'k') => void;
   alignmentCounts: { 'l': number, 's': number, 'k': number };
 }
@@ -194,21 +195,39 @@ export default function TopicBar({ topic, alignment, onArticleChange, alignmentC
                 gap: '1rem', 
               }}
             >
-              <ToggleButton value='l' aria-label='l' sx={getButtonStyles('l', alignmentCounts['l'] === 0)} disabled={alignmentCounts['l'] === 0}>
-                {alignmentCounts['l']} {articleName(alignmentCounts['l'])}
+              <ToggleButton
+                value='l'
+                aria-label='l'
+                sx={getButtonStyles('l', alignmentCounts['l'] <= 0)} // Ensure button is only disabled if count is 0 or less
+                disabled={alignmentCounts['l'] <= 0}
+              >
+                {currentAlignment === 'l'
+                  ? `Liberálne zdroje`
+                  : `${alignmentCounts['l']} ${articleName(alignmentCounts['l'])}`}
               </ToggleButton>
-              <ToggleButton value='s' aria-label='s' sx={getButtonStyles('s', alignmentCounts['s'] === 0)} disabled={alignmentCounts['s'] === 0}>
-                {alignmentCounts['s']} {articleName(alignmentCounts['s'])}
+              <ToggleButton
+                value='s'
+                aria-label='s'
+                sx={getButtonStyles('s', alignmentCounts['s'] <= 0)} // Ensure button is only disabled if count is 0 or less
+                disabled={alignmentCounts['s'] <= 0}
+              >
+                {currentAlignment === 's'
+                  ? `Stredové zdroje`
+                  : `${alignmentCounts['s']} ${articleName(alignmentCounts['s'])}`}
               </ToggleButton>
-              <ToggleButton value='k' aria-label='k' sx={getButtonStyles('k', alignmentCounts['k'] === 0)} disabled={alignmentCounts['k'] === 0}>
-                {alignmentCounts['k']} {articleName(alignmentCounts['k'])}
+              <ToggleButton
+                value='k'
+                aria-label='k'
+                sx={getButtonStyles('k', alignmentCounts['k'] <= 0)} // Ensure button is only disabled if count is 0 or less
+                disabled={alignmentCounts['k'] <= 0}
+              >
+                {currentAlignment === 'k'
+                  ? `Konzervatívne zdroje`
+                  : `${alignmentCounts['k']} ${articleName(alignmentCounts['k'])}`}
               </ToggleButton>
             </ToggleButtonGroup>
           </Box>
         </Box>
       );
-    } else{
-      
-    }
-    
+    } 
 }
