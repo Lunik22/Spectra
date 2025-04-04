@@ -28,7 +28,7 @@ const sources: { [key: string]: { name: string; altImg: string; logo?: string; b
   "byvanie.sme.sk": { "name": "Denník SME", "altImg": "/imgs/altImgs/DennikSmeAlt.jpg", "logo": "/imgs/logos/DennikSMELogo.jpg", "bias": "Liberálne" },
   "dennikn.sk": { "name": "Denník N", "altImg": "/imgs/altImgs/DennikNAlt.jpg", "logo": "/imgs/logos/DennikNLogo.jpg", "bias": "Liberálne" },
   "e.dennikn.sk": { "name": "Denník N", "altImg": "/imgs/altImgs/DennikNAlt.jpg", "logo": "/imgs/logos/DennikNLogo.jpg", "bias": "Liberálne" },
-  "www.aktuality.sk": { "name": "Aktuality.sk", "altImg": "/imgs/altImgs/AktualitySkAlt.jpg", "bias": "Liberálne" },
+  "www.aktuality.sk": { "name": "Aktuality.sk", "altImg": "/imgs/altImgs/AktualitySkAlt.jpg", "logo": "/imgs/logos/AktualitySkLogo.jpg", "bias": "Liberálne" },
   "spravy.stvr.sk": { "name": "Správy STVR", "altImg": "/imgs/altImgs/SpravyStvrAlt.jpg", "logo": "/imgs/logos/SpravyStvrLogo.jpg", "bias": "Stredové" },
   "tvnoviny.sk": { "name": "TVNoviny.sk", "altImg": "/imgs/altImgs/TvNovinyAlt.jpg", "logo": "/imgs/logos/TvNovinyLogo.jpg", "bias": "Stredové" },
   "www.postoj.sk": { "name": "Denník Postoj", "altImg": "/imgs/altImgs/DennikPostojAlt.jpg", "logo": "/imgs/logos/DennikPostojLogo.jpg", "bias": "Konzervatívne" },
@@ -84,7 +84,7 @@ export default function ArticleCardLg({ title, image, date, sourceLink }: Articl
     <Card sx={{ display: 'flex', height: '20rem', marginY: '1.5rem', alignItems: 'center'}}>
       <CardMedia
         component="img"
-        sx={{ width: '50%', transform: 'translateX(30pt)', borderRadius: '30px', height: '100%'}}
+        sx={{ width: '50%', transform: 'translateX(30px)', borderRadius: '30px', height: '100%'}}
         image={image}
         alt="Img"
       />
@@ -94,7 +94,7 @@ export default function ArticleCardLg({ title, image, date, sourceLink }: Articl
         width:'50%', 
         height:"95%", 
         flexDirection: 'column',  
-        transform: 'translateX(-30pt)', 
+        transform: 'translateX(-30px)', 
         borderRadius: '30px',
         backdropFilter: 'blur(10px)', 
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -178,23 +178,6 @@ export default function ArticleCardLg({ title, image, date, sourceLink }: Articl
                 {title}
               </Link>
             </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-            <img 
-              src={appliedTheme.custom.arrowPath} 
-              style={{
-                height: '1.5rem',
-                width: '1.5rem',
-                transform: 'rotate(180deg)'
-              }} 
-            />
-            <img 
-              src={appliedTheme.custom.arrowPath} 
-              style={{
-                height: '1.5rem',
-                width: '1.5rem',
-              }} 
-            />
           </Box>
           </Box>
         </CardContent>

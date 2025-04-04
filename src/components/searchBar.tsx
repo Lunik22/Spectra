@@ -7,7 +7,7 @@ const Search = styled('div')(({ theme }) => ({
   borderRadius: '30px',
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   transition: '0.3s background',
-  transform: 'translatex(30pt)',
+  transform: 'translatex(15px)',
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },

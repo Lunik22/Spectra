@@ -13,7 +13,7 @@ import { usePathname } from 'next/navigation';
 interface TopicBarProps {
   topic: Topic;
   alignment: '' | 'l' | 's' | 'k';
-  onArticleChange: (topicId: string, newArticle: any, alignment: '' | 'l' | 's' | 'k') => void;
+  onArticleChange: (alignment: '' | 'l' | 's' | 'k') => void;
   alignmentCounts: { 'l': number, 's': number, 'k': number };
 }
 
@@ -36,9 +36,8 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
     const handleAlignment = async (event: React.MouseEvent<HTMLElement>, newAlignment: '' | 'l' | 's' | 'k') => {
       if (newAlignment !== null) {
         setCurrentAlignment(newAlignment);
-        const newArticles = await getArticle(topic.$id, alignmentCounts, newAlignment);
-        onArticleChange(topic.$id, newArticles, newAlignment);
-        console.log(newArticles);
+        onArticleChange(newAlignment);
+        console.log(newAlignment);
       }
     };
 
@@ -143,10 +142,10 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
             py: '1rem',
             px: '2rem',
             borderRadius: '30px',
-            width: '50%',
+            width: '40%',
             backdropFilter: 'blur(10px)', 
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            transform: 'translateX(15pt)',
+            transform: 'translateX(15px)',
             '&::before': {
                 content: '""',
                 position: 'absolute',
@@ -183,7 +182,7 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
             alignItems: 'center',
             justifyContent: 'end',
             gap: '1rem',
-            transform: 'translateX(-15pt)'
+            transform: 'translateX(-15px)'
           }}>
             <ToggleButtonGroup
               value={currentAlignment}

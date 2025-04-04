@@ -82,23 +82,30 @@ export async function getTopics(offset = 0, category: string) {
   }
 }
 
-export async function getTopic(topic: string, alignment: 'l' | 's' | 'k' | '' = '', offset: number = 0) {
-  let timestamp = Math.floor(Date.now() / 1000);
+export async function getTopic(topic: string, alignment: 'l' | 's' | 'k' | '' = '') {
   try {
-    let topicResponse;
-    topicResponse = await databases.getDocument(
+    const topicResponse = await databases.getDocument(
       '66e992ad00337f2887d0',
       '673995d50003db697576',
       topic,
-    )
-    const topicsData = topicResponse.document
-    console.log(topicsData);
-    return topicsData;
+    );
+
+    const topicData = {
+      $id: topicResponse.$id,
+      TopicName: topicResponse.TopicName,
+      TopicCategory: topicResponse.TopicCategory,
+      TopicArticles: topicResponse.TopicArticles,
+      TopicLastArticle: topicResponse.TopicLastArticle,
+      TopicLatestArticlesCount: topicResponse.TopicLatestArticlesCount,
+      TopicCategories: topicResponse.TopicCategories,
+    } as Topic;
+
+    console.log(topicData);
+    return topicData;
 
   } catch (error) {
     console.error(`Error retrieving topic ${topic}: ${error}`);
     return null;
   }
-  
 }
 

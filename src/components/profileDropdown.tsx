@@ -38,7 +38,7 @@ export default function ProfileDropdown() {
   };
 
   return (
-    <Box sx={{ transform: 'translatex(-30pt)',}}>
+    <Box sx={{ transform: 'translatex(-30px)',}}>
       <Button
         id="demo-positioned-button"
         aria-controls={open ? 'demo-positioned-menu' : undefined}

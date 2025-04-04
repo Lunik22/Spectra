@@ -48,7 +48,7 @@ export default function Navbar() {
             position: 'relative',
             zIndex: 1, 
           }}>
-            <Container sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Container sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 1 }}>
               <SearchBar/>
               {user ? (
                 <ProfileDropdown/>
@@ -56,6 +56,15 @@ export default function Navbar() {
                 <LoginButton />
               )}
             </Container>
+            <Box sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 2,
+            }}>
+              <img src={theme.custom.logoPath} alt="" style={{ height: '3rem', marginTop: '0.5rem' }}/>
+            </Box>
           </Toolbar>
         </AppBar>
       </Container>

@@ -8,14 +8,16 @@ import { useInView } from "react-intersection-observer";
 import { getArticle, getAvailableAlignments } from "@/services/articleService";
 import { usePathname } from "next/navigation";
 import { getTopic } from "@/services/topicService";
+import next from "next";
+import { Article } from "@/types";
 
 function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export default function TopicFeed() {
-  const [articles, setArticles] = useState<any[]>([]);
-  const [page, setPage] = useState(1);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [page, setPage] = useState(-1);
   const [loading, setLoading] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
   const [trigger, inView] = useInView();
@@ -24,11 +26,9 @@ export default function TopicFeed() {
   const [alignmentCounts, setAlignmentCounts] = useState<{ 'l': number, 's': number, 'k': number }>({ l: 0, s: 0, k: 0 });
 
   const pathname = usePathname();
-  console.log(pathname)
   const parts = pathname.split('/');
   const topicId = parts[parts.length - 1];
-  console.log(topicId)
-  const topic = getTopic(topicId);
+  const [topicName, setTopicName] = useState<string>("");
 
   const loadArticles = async () => {
     if (loading || limit) return;
@@ -39,19 +39,29 @@ export default function TopicFeed() {
 
     await delay(250);
 
+    const nextPage = page + 1;
+
     const timestamp = Math.floor(Date.now() / 1000);
     const availableAlignments = await getAvailableAlignments(topicId, timestamp);
     setAlignmentCounts(availableAlignments);
+    console.log(alignment)
+    console.log(nextPage)
 
-    const newArticles = await getArticle(topicId, availableAlignments, alignment, 2, page);
+    const newArticle = await getArticle(topicId, availableAlignments, alignment, 1, nextPage, timestamp) as Article;
+    
 
-    if (!newArticles || newArticles.length === 0) {
-      setLimit(true);
-    } else {
-      setArticles(prevArticles => [...prevArticles, ...(Array.isArray(newArticles) ? newArticles : [newArticles])]);
-      setPage(prevPage => prevPage + 1);
+    const topic = await getTopic(topicId);
+    if (topic) {
+      setTopicName(topic.TopicName);
     }
 
+    if (!newArticle) {
+      setLimit(true);
+    } else {
+      setArticles(prevArticles => [...prevArticles, newArticle]);
+    }
+
+    setPage(nextPage);
     setLoading(false);
     setShowProgress(false);
   };
@@ -64,6 +74,7 @@ export default function TopicFeed() {
 
   const handleAlignmentChange = async (newAlignment: '' | 'l' | 's' | 'k') => {
     setAlignment(newAlignment);
+    console.log(`Selected alignment: ${newAlignment}`);
     setArticles([]); // Clear current articles
     setPage(0); // Reset pagination
     setLimit(false); // Reset limit
@@ -74,9 +85,9 @@ export default function TopicFeed() {
     <Stack spacing={2} sx={{ paddingTop: "11rem" }}>
       <Box>
         <TopicBarXl
-          topic={{ $id: topicId, TopicName: "Topic Name Placeholder", TopicCategory: "", TopicArticles: [] }}
+          topic={{ $id: topicId, TopicName: topicName, TopicCategory: "", TopicArticles: [] }}
           alignment={alignment}
-          onArticleChange={(_, __, newAlignment) => handleAlignmentChange(newAlignment)}
+          onArticleChange={(newAlignment) => handleAlignmentChange(newAlignment)}
           alignmentCounts={alignmentCounts}
         />
       </Box>

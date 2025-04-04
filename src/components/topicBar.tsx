@@ -145,7 +145,7 @@ export default function TopicBar({ topic, alignment, onArticleChange, alignmentC
             width: '50%',
             backdropFilter: 'blur(10px)', 
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            transform: 'translateX(15pt)',
+            transform: 'translateX(15px)',
             '&::before': {
                 content: '""',
                 position: 'absolute',
@@ -182,7 +182,7 @@ export default function TopicBar({ topic, alignment, onArticleChange, alignmentC
             alignItems: 'center',
             justifyContent: 'end',
             gap: '1rem',
-            transform: 'translateX(-15pt)'
+            transform: 'translateX(-15px)'
           }}>
             <ToggleButtonGroup
               value={currentAlignment}
