@@ -13,7 +13,10 @@ export async function createAdminClient() {
     return {
         get account() {
           return account;
-        }
+        },
+        get client() {
+          return client;
+        } 
       };
 }
 

@@ -47,7 +47,7 @@ export default function TopicFeed() {
     console.log(`New Page ${nextPage}`);
 
     const result = await getArticle(topicId, availableAlignments, alignment, 1, nextPage, timestamp);
-    const newArticle = result && typeof result === 'object' && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' in result && 'ArticlePayWall' in result && 'ArticleAuthors' in result && 'ArticlePreview' in result && 'ArticleTopics' in result && 'ArticleReliability' in result && 'ArticleType' in result && 'ArticleLanguage' in result
+    const newArticle = result && typeof result === 'object' && '$id' in result && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' in result && 'ArticlePayWall' in result && 'ArticleAuthors' in result && 'ArticlePreview' in result && 'ArticleTopics' in result && 'ArticleReliability' in result && 'ArticleType' in result && 'ArticleLanguage' in result
       ? (result as unknown as Article)
       : null;
 
@@ -96,7 +96,7 @@ export default function TopicFeed() {
   
       // Load the first page of articles for the new alignment
       const result = await getArticle(topicId, availableAlignments, newAlignment, 1, 0, timestamp);
-      const newArticle = result && typeof result === 'object' && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' in result && 'ArticlePayWall' in result && 'ArticleAuthors' in result && 'ArticlePreview' in result && 'ArticleTopics' in result && 'ArticleReliability' in result && 'ArticleType' in result && 'ArticleLanguage' in result
+      const newArticle = result && typeof result === 'object' && '$id' in result && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' in result && 'ArticlePayWall' in result && 'ArticleAuthors' in result && 'ArticlePreview' in result && 'ArticleTopics' in result && 'ArticleReliability' in result && 'ArticleType' in result && 'ArticleLanguage' in result
         ? (result as unknown as Article)
         : null;
   
@@ -120,6 +120,7 @@ export default function TopicFeed() {
         <Grow in={true} timeout={500} key={index}>
           <Box>
             <ArticleCardXl
+              $id={article.$id}
               title={article.ArticleTitle}
               image={article.ArticleImage}
               date={article.ArticleDate}

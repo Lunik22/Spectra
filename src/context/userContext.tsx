@@ -18,13 +18,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         // Check cookies for user and avatar data
         const storedUser = Cookies.get('user');
-        const storedAvatar = Cookies.get('avatar');
+        const storedProfilePicture = Cookies.get('profile-picture');
 
-        if (storedUser && storedAvatar) {
+        if (storedUser) {
           setUser(JSON.parse(storedUser));
-          setAvatar(storedAvatar);
+        }
+
+        if (storedProfilePicture) {
+          setAvatar(storedProfilePicture); // Load profile picture from cookies
         } else {
-          // Fetch user and avatar data if not in cookies
           const loggedInUser = await getLoggedInUser();
           setUser(loggedInUser);
 
@@ -39,7 +41,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
               setAvatar(null);
             }
 
-            // Store user data in cookies
             Cookies.set('user', JSON.stringify(loggedInUser), { expires: 7 });
           } else {
             setAvatar(null);

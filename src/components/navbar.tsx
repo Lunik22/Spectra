@@ -16,14 +16,16 @@ export default function Navbar() {
   useEffect(() => {
     try {
       getLoggedInUser().then(setUser).catch(console.error);
-      getAvatarURL()
-        .then(buffer => {
-          if (buffer) {
-            const base64String = btoa(String.fromCharCode(...Array.from(new Uint8Array(buffer))));
-            setAvatar(`data:image/png;base64,${base64String}`);
-          }
-        })
-        .catch(console.error);
+      if(user) {
+        getAvatarURL()
+          .then(buffer => {
+            if (buffer) {
+              const base64String = btoa(String.fromCharCode(...Array.from(new Uint8Array(buffer))));
+              setAvatar(`data:image/png;base64,${base64String}`);
+            }
+          })
+          .catch(console.error);
+      }
     } catch (error) {
       console.error("Error in Navbar useEffect:", error);
     }

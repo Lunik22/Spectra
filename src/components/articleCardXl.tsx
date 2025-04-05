@@ -11,6 +11,15 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { sk } from 'date-fns/locale';
 import Link from 'next/link';
 import { ArticleCardXlProps } from '@/types';
+import { IconButton } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import { getLoggedInUser } from '@/appwrite/authService';
+import { isArticleBookmarked, setBookmark, undoBookmark } from '@/services/bookmarkService';
+import { redirect } from "next/navigation";
+import { useEffect, useState } from 'react';
 
 
 
@@ -35,9 +44,30 @@ const sources: { [key: string]: { name: string; altImg: string; logo?: string; b
   "hnonline.sk": { "name": "Hospodárske Noviny", "altImg": "/imgs/altImgs/HospodarskeNovinyAlt.jpg", "logo": "/imgs/logos/HospodarskeNovinyLogo.jpg", "bias": "Konzervatívne" },
 };
 
-export default function ArticleCardXl({ title, image, date, sourceLink, paywall, authors, preview, reliability, type, language }: ArticleCardXlProps) {
+export default function ArticleCardXl({ $id, title, image, date, sourceLink, paywall, authors, preview, reliability, type, language }: ArticleCardXlProps) {
   const theme = useTheme();
-  const [expanded, setExpanded] = React.useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false); 
+  const [isBookmarked, setIsBookmarked] = useState(false); 
+
+  useEffect(() => {
+    getLoggedInUser().then(user => {
+      setUserId(user?.$id || null); // Get the user ID from the logged-in user
+    });
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      isArticleBookmarked(userId, $id).then((response: unknown) => {
+        if (response) {
+          setIsBookmarked(true);
+        } else {
+          setIsBookmarked(false);
+        }
+      });
+    }
+  }, [userId, $id]); // Ensure this hook runs when `userId` or `$id` changes
 
   if (!sourceLink) {
     console.error("Source link is undefined or null.");
@@ -83,6 +113,31 @@ export default function ArticleCardXl({ title, image, date, sourceLink, paywall,
   const toggleExpand = () => {
     setExpanded(!expanded);
   };
+
+  const handleFollowChange = () => {
+    setIsFollowing(!isFollowing); // Toggle follow status
+  };
+
+  const handleBookmarkChange = () => {
+    if (!userId) {
+      redirect('/autentifikacia/prihlasenie');
+    } else {
+      if (!isBookmarked) {
+        setBookmark(userId, $id).then(() => {
+          console.log("Article bookmarked successfully!");
+        }).catch((error) => {
+          console.error("Error bookmarking article:", error);
+        });
+      } else {
+        undoBookmark(userId, $id).then(() => {
+          console.log("Article unbookmarked successfully!");
+        }).catch((error) => {
+          console.error("Error unbookmarking article:", error);
+        });
+      }
+    }
+    setIsBookmarked(!isBookmarked); 
+  }
 
   return (
     <Card
@@ -154,7 +209,7 @@ export default function ArticleCardXl({ title, image, date, sourceLink, paywall,
                     component="div"
                     variant="h3"
                     sx={{
-                      marginRight: '1rem',
+                      marginRight: '0.5rem',
                       color: appliedTheme.palette.text.primary,
                       WebkitTapHighlightColor: appliedTheme.palette.primary.main,
                       '&::selection': {
@@ -165,6 +220,107 @@ export default function ArticleCardXl({ title, image, date, sourceLink, paywall,
                   >
                     {sources[source]["name"]}
                   </Typography>
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      '&:hover .tooltip': {
+                        visibility: 'visible',
+                        opacity: 1,
+                      },
+                    }}
+                  >
+                    <IconButton
+                      onClick={handleFollowChange}
+                      sx={{
+                        color: theme.palette.text.primary,
+                        opacity: expanded ? 1 : 0,
+                        transform: expanded ? 'scale(1)' : 'scale(0.8)',
+                        transition: 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out, color 0.3s ease-in-out',
+                        '&:hover': {
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                    >
+                      {isFollowing ? <CheckCircleIcon /> : <AddCircleOutlineIcon />}
+                    </IconButton>
+                    <Box
+                      sx={{
+                        visibility: 'hidden',
+                        backgroundColor: theme.palette.primary.darker,
+                        color: theme.palette.text.primary,
+                        textAlign: 'center',
+                        borderRadius: '30px',
+                        px: '1rem',
+                        py: '0.5rem',
+                        position: 'absolute',
+                        zIndex: 1,
+                        bottom: '125%',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        whiteSpace: 'nowrap',
+                        opacity: 0,
+                        transition: 'opacity 0.3s, visibility 0.3s',
+                      }}
+                      className="tooltip"
+                    >
+                      {isFollowing ? 'Vymazať sledovanie' : 'Sledovať zdroj'}
+                    </Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      '&:hover .tooltip': {
+                        visibility: 'visible',
+                        opacity: 1,
+                      },
+                    }}
+                  >
+                    <IconButton
+                      onClick={handleBookmarkChange}
+                      sx={{
+                        color: theme.palette.text.primary,
+                        opacity: expanded ? 1 : 0,
+                        transform: expanded ? 'scale(1)' : 'scale(0.8)',
+                        transition: 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out, color 0.3s ease-in-out',
+                        '&:hover': {
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                    >
+                      {isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+                    </IconButton>
+                    <Box
+                      sx={{
+                        visibility: 'hidden',
+                        backgroundColor: theme.palette.primary.darker,
+                        color: theme.palette.text.primary,
+                        textAlign: 'center',
+                        borderRadius: '30px',
+                        px: '1rem',
+                        py: '0.5rem',
+                        position: 'absolute',
+                        zIndex: 1,
+                        bottom: '125%',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        whiteSpace: 'nowrap',
+                        opacity: 0,
+                        transition: 'opacity 0.3s, visibility 0.3s',
+                      }}
+                      className="tooltip"
+                    >
+                      {isFollowing ? 'Vymazať uložnie' : 'Uložiť článok'}
+                    </Box>
+                  </Box>
+                </Box>
+                <Box sx={{
+                  display: 'flex',
+                  justifyContent: 'end',
+                  alignItems: 'center',
+                  width: '100%',
+                }}>
                   <Box
                     sx={{
                       position: 'relative',
@@ -303,23 +459,23 @@ export default function ArticleCardXl({ title, image, date, sourceLink, paywall,
                       {language == 'Štandardný' ? 'Tento článok je písaný štandardným jazykom.' : 'Článok je písaný senzaciálnym jazykom, alebo sa vyjadruje názor.'}
                     </Box>
                   </Box>
+                  <Typography
+                    component="div"
+                    variant="h3"
+                    sx={{
+                      color: appliedTheme.palette.text.primary,
+                      WebkitTapHighlightColor: appliedTheme.palette.primary.main,
+                      '&::selection': {
+                        backgroundColor: appliedTheme.palette.text.primary,
+                        color: appliedTheme.palette.primary.dark,
+                      },
+                      textAlign: 'right',
+                    }}
+                  >
+                    {formattedDate}
+                  </Typography>
                 </Box>
-                <Typography
-                  component="div"
-                  variant="h3"
-                  sx={{
-                    color: appliedTheme.palette.text.primary,
-                    WebkitTapHighlightColor: appliedTheme.palette.primary.main,
-                    width: '100%',
-                    '&::selection': {
-                      backgroundColor: appliedTheme.palette.text.primary,
-                      color: appliedTheme.palette.primary.dark,
-                    },
-                    textAlign: 'right',
-                  }}
-                >
-                  {formattedDate}
-                </Typography>
+                  
               </Box>
               <Box
                 sx={{
@@ -431,16 +587,6 @@ export default function ArticleCardXl({ title, image, date, sourceLink, paywall,
               sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer' }}
               onClick={toggleExpand}
             >
-              <img
-                src={appliedTheme.custom.arrowPath}
-                style={{
-                  height: '1rem',
-                  width: '1rem',
-                  transform: expanded ? 'rotate(270deg)' : 'rotate(90deg)',
-                  marginRight: '0.5rem',
-                  transition: 'transform 0.3s ease-in-out', // Smooth transition for arrow rotation
-                }}
-              />
               <Typography
                 variant="h3"
                 sx={{

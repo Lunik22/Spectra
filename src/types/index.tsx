@@ -36,6 +36,7 @@ export interface ArticleCardLgProps {
 }
   
 export interface ArticleCardXlProps {
+    $id: string;
     title: string;
     image: string;
     date: string;
@@ -49,4 +50,10 @@ export interface ArticleCardXlProps {
     language: string;
 }
 
+export interface UserItems {
+    $id: string;
+    UserSavedArticles: string[];
+    UserFollowedTopics: string[];
+    UserFollowedSources: string[];
+}
  

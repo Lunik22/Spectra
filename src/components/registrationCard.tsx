@@ -4,6 +4,7 @@ import { Box, Button, Card, CardContent, Typography, InputBase, styled, Modal, F
 import { signUpWithEmail } from '@/appwrite/authService';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
+import Cookies from 'js-cookie';
 
 const CustomInput = styled(InputBase)(({ theme }) => ({
   '& .MuiInputBase-input': {
@@ -24,17 +25,51 @@ const CustomInput = styled(InputBase)(({ theme }) => ({
   borderRadius: '30px',
 }));
 
+const FileInput = styled('input')({
+  display: 'none',
+});
+
 export default function RegistrationCard() {
   const theme = useTheme();
   const router = useRouter();
-  const [formData, setFormData] = React.useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [formData, setFormData] = React.useState({ name: '', email: '', password: '', confirmPassword: '', profilePicture: null });
   const [error, setError] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const [termsAccepted, setTermsAccepted] = React.useState(false);
+  const [profilePicture, setProfilePicture] = React.useState<File | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const maxSizeInBytes = 102400 ; 
+
+      if (!validTypes.includes(file.type)) {
+        setError('Podporované sú iba formáty JPG, PNG a GIF.');
+        setOpen(true);
+        return;
+      }
+
+      if (file.size > maxSizeInBytes) {
+        setError('Maximálna veľkosť profilovej fotky je 1MB.');
+        setOpen(true);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        Cookies.set('profile-picture', base64String, { expires: 7 }); // Save profile picture to cookies
+        setProfilePicture(file);
+      };
+      reader.readAsDataURL(file);
+      
+    }
   };
 
   const handleRegister = async () => {
@@ -55,7 +90,9 @@ export default function RegistrationCard() {
       formDataObj.append('name', formData.name);
       formDataObj.append('email', formData.email);
       formDataObj.append('password', formData.password);
-
+      if (profilePicture) {
+        formDataObj.append('profilePicture', profilePicture);
+      }
       await signUpWithEmail(formDataObj);
       router.push('/autentifikacia/prihlasenie');
     } catch (error: unknown) {
@@ -121,6 +158,36 @@ export default function RegistrationCard() {
               onChange={handleInputChange}
               fullWidth
             />
+            <Box>
+              <label htmlFor="profile-picture-upload">
+                <FileInput
+                  id="profile-picture-upload"
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.gif"
+                  onChange={handleFileChange}
+                />
+                <Button
+                  variant="contained"
+                  component="span"
+                  fullWidth
+                  sx={{
+                    borderRadius: '2rem',
+                    zIndex: 3,
+                    width: '100%',
+                    height: '2.5rem',
+                    backdropFilter: 'blur(10px)',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                >
+                  Nahrať profilovú fotku
+                </Button>
+              </label>
+              {profilePicture && (
+                <Typography variant="body2" sx={{ mt: 1, textAlign: 'center' }}>
+                  {profilePicture.name}
+                </Typography>
+              )}
+            </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Checkbox
                 checked={termsAccepted}
