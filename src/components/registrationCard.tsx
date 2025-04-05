@@ -85,20 +85,15 @@ export default function RegistrationCard() {
       return;
     }
 
-    try {
-      const formDataObj = new FormData();
-      formDataObj.append('name', formData.name);
-      formDataObj.append('email', formData.email);
-      formDataObj.append('password', formData.password);
-      if (profilePicture) {
-        formDataObj.append('profilePicture', profilePicture);
-      }
-      await signUpWithEmail(formDataObj);
-      router.push('/autentifikacia/prihlasenie');
-    } catch (error) {
-      setError('Registrácia zlyhala.');
-      setOpen(true);
+    const formDataObj = new FormData();
+    formDataObj.append('name', formData.name);
+    formDataObj.append('email', formData.email);
+    formDataObj.append('password', formData.password);
+    if (profilePicture) {
+      formDataObj.append('profilePicture', profilePicture);
     }
+    await signUpWithEmail(formDataObj);
+    router.push('/autentifikacia/prihlasenie');
   };
 
   const handleClose = () => {
