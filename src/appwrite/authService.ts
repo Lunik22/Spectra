@@ -11,42 +11,45 @@ export async function signUpWithEmail(formData: FormData) {
     const password = formData.get("password") as string | null;
     const name = formData.get("name") as string | null;
     const profilePicture = formData.get("profilePicture") as File | null;
-  
-    if (email && password && name) {
-      const { account } = await createAdminClient();
-      const userId = ID.unique(); // Generate a unique user ID
-      await account.create(userId, email, password, name);
-      if (profilePicture) {
-          const storage = new Storage(account.client);
-          await storage.createFile(
-              process.env.NEXT_PUBLIC_APPWRITE_USERS_BUCKET_ID || '', // Ensure this is set in your environment variables
-              userId,
-              profilePicture,
-          );
-      }
-      const session = await account.createEmailPasswordSession(email, password);
-     
-      (await cookies()).set("my-custom-session", session.secret, {
-        path: "/",
-        httpOnly: true,
-        sameSite: "strict",
-        secure: true,
-      });
-     
-      const databases = new Databases((await createAdminClient()).client);
-      databases.createDocument(
-          process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || '',
-          process.env.NEXT_PUBLIC_APPWRITE_USER_ITEMS_COLLECTION || '',
-          userId,
-          {
-            UserSavedArticles: [],
-            UserFollowedTopics: [],
-            UserFollowedSources: [],
-          }
-      )
-    
-      redirect("/");
+
+    if (!email || !password || !name) {
+        throw new Error("Invalid form data: email, password, and name are required.");
     }
+  
+    const { account } = await createAdminClient();
+  
+    const userId = ID.unique(); // Generate a unique user ID
+    await account.create(userId, email, password, name);
+    if (profilePicture) {
+        const storage = new Storage(account.client);
+        await storage.createFile(
+            process.env.NEXT_PUBLIC_APPWRITE_USERS_BUCKET_ID || '', // Ensure this is set in your environment variables
+            userId,
+            profilePicture,
+        );
+    }
+    const session = await account.createEmailPasswordSession(email, password);
+  
+    (await cookies()).set("my-custom-session", session.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+    });
+
+    const databases = new Databases((await createAdminClient()).client);
+    databases.createDocument(
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || '',
+        process.env.NEXT_PUBLIC_APPWRITE_USER_ITEMS_COLLECTION || '',
+        userId,
+        {
+          UserSavedArticles: [],
+          UserFollowedTopics: [],
+          UserFollowedSources: [],
+        }
+    )
+  
+    redirect("/");
 }
 
 export async function signInWithEmail(formData: { email: string; password: string }) {
