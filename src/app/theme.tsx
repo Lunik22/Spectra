@@ -40,7 +40,7 @@ const defaultTheme = createTheme({
       darker: "#0A010D",
       contrastText: "#F9E5FF",
       left: '#FF1A9F',
-      right: '#160D80',
+      right: '#2D1AFF',
     },
     background:{
       default: "#0A010D",

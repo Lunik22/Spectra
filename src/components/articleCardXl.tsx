@@ -71,6 +71,9 @@ export default function ArticleCardXl({ title, image, date, sourceLink, paywall,
   let appliedTheme = theme;
   if (sources[source]?.bias === 'Liberálne') {
     appliedTheme = worldTheme;
+    console.log(paywall)
+    console.log(reliability)
+    console.log(language)
   } else if (sources[source]?.bias === 'Stredové') {
     appliedTheme = defaultTheme;
   } else if (sources[source]?.bias === 'Konzervatívne') {

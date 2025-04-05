@@ -48,3 +48,5 @@ export interface ArticleCardXlProps {
     type: string;
     language: string;
 }
+
+ 

@@ -1,12 +1,13 @@
 'use server'
 import { Browser, ID } from "node-appwrite";
-import { createAdminClient, createSessionClient } from "./appwriteClient";
+import { createAdminClient, createSessionClient, createGoogleClient } from "./appwriteClient";
+import { OAuthProvider } from "appwrite";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function signUpWithEmail(formData: FormData) {
+export async function signUpWithEmail(formData: FormData) {
     const email = formData.get("email") as string | null;
     const password = formData.get("password") as string | null;
     const name = formData.get("name") as string | null;
@@ -20,7 +21,7 @@ async function signUpWithEmail(formData: FormData) {
     await account.create(ID.unique(), email, password, name);
     const session = await account.createEmailPasswordSession(email, password);
   
-    cookies().set("my-custom-session", session.secret, {
+    (await cookies()).set("my-custom-session", session.secret, {
       path: "/",
       httpOnly: true,
       sameSite: "strict",
@@ -30,9 +31,8 @@ async function signUpWithEmail(formData: FormData) {
     redirect("/");
 }
 
-export async function signInWithEmail(formData: FormData) {
-    const email = formData.get("email") as string | null;
-    const password = formData.get("password") as string | null;
+export async function signInWithEmail(formData: { email: string; password: string }) {
+    const { email, password } = formData;
 
     if (!email || !password) {
         throw new Error("Invalid form data: email and password are required.");
@@ -46,7 +46,7 @@ export async function signInWithEmail(formData: FormData) {
         throw new Error("Failed to create session");
     }
 
-    cookies().set("my-custom-session", session.secret, {
+    (await cookies()).set("my-custom-session", session.secret, {
         path: "/",
         httpOnly: true,
         sameSite: "strict",
@@ -56,17 +56,35 @@ export async function signInWithEmail(formData: FormData) {
     redirect("/");
 }
 
-export async function getLoggedInUser() {
+export async function signInWithGoogle() {
     try {
-      const sessionClient = await createSessionClient();
-      if (!sessionClient) {
-        return null; // No session client means user is not logged in
-      }
-      const { account } = sessionClient;
-      return await account.get();
+        const account = await createGoogleClient();
+        if (!account) {
+            throw new Error("Failed to create session client.");
+        }
+        account.googleAccount.createOAuth2Session(
+            OAuthProvider.Google,
+            "http://localhost:3000/",
+            "http://localhost:3000/",
+            ["email", "profile"]
+        )
     } catch (error) {
-      return null;
+        console.error("Error during Google login:", error);
+        throw new Error("Failed to initiate Google login.");
     }
+}
+
+export async function getLoggedInUser() {
+  try {
+    const sessionClient = await createSessionClient();
+    if (!sessionClient) {
+      return null; // No session client means user is not logged in
+    }
+    const { account } = sessionClient;
+    return await account.get();
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function getAvatarURL() {
@@ -89,7 +107,7 @@ export async function signOut() {
     }
     const { account } = sessionClient;
     await account.deleteSession('current'); // Delete the current session
-    cookies().delete("my-custom-session"); // Clear the session cookie
+    (await cookies()).delete("my-custom-session"); // Clear the session cookie
   } catch (error) {
     console.error("Error during logout:", error);
     throw error;

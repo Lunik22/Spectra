@@ -1,8 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { AppBar, Box, Container, Toolbar } from '@mui/material';
+import { AppBar, Box, Button, Container, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import LoginButton from './loginButton';
 import SearchBar from './searchBar';
 import { getAvatarURL, getLoggedInUser } from '@/appwrite/authService';
 import { User } from '@/types';
@@ -54,7 +53,19 @@ export default function Navbar() {
               {user ? (
                 <ProfileDropdown/>
               ) : (
-                <LoginButton />
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  href="/autentifikacia/prihlasenie"
+                  sx={{ 
+                      borderRadius: '2rem',
+                      zIndex: 3,
+                      width: '10rem', 
+                      height: '2.5rem',
+
+                  }}>
+                    Prihlásiť sa
+                </Button>
               )}
             </Container>
             <Box sx={{
