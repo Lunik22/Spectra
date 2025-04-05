@@ -95,12 +95,8 @@ export default function RegistrationCard() {
       }
       await signUpWithEmail(formDataObj);
       router.push('/autentifikacia/prihlasenie');
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message || 'Registrácia zlyhala.');
-      } else {
-        setError('Registrácia zlyhala.');
-      }
+    } catch (error) {
+      setError('Registrácia zlyhala.');
       setOpen(true);
     }
   };
