@@ -5,7 +5,7 @@ import { defaultTheme, slovakiaTheme, worldTheme } from '../app/theme';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { getArticle } from '@/services/articleService';
+import { getArticles } from '@/services/articleService';
 import { Topic } from '@/types';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -37,7 +37,7 @@ export default function TopicBar({ topic, alignment, onArticleChange, alignmentC
     const handleAlignment = async (event: React.MouseEvent<HTMLElement>, newAlignment: 'l' | 's' | 'k') => {
       if (newAlignment !== null) {
         setCurrentAlignment(newAlignment);
-        const newArticles = await getArticle(topic.$id, alignmentCounts, newAlignment);
+        const newArticles = await getArticles(topic.$id, alignmentCounts, newAlignment);
         onArticleChange(topic.$id, newArticles, newAlignment);
         console.log(newArticles);
       }

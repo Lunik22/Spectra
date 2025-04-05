@@ -1,28 +1,37 @@
 "use server";
 
-import { Client, Databases, Query } from "node-appwrite"; // Ensure the correct package is used
+import { Client, Databases } from "node-appwrite"; // Ensure the correct package is used
 import { createAdminClient } from "@/appwrite/appwriteClient";
+import { Bookmarks } from "@/types";
 
 const session = await createAdminClient();
 
 const databases = new Databases(session.client as Client); // Explicitly cast to the correct Client type
 
-export async function isArticleBookmarked( userId: string, articleId: string) {
+export async function getBookmarks( userId: string, articleId: string = '') {
   try {
-    const bookmarkResponse = await databases.listDocuments(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || '',
-      process.env.NEXT_PUBLIC_APPWRITE_USER_ITEMS_COLLECTION || '',
-      [
-          Query.equal('$id', userId),
-          Query.contains('UserSavedArticles', articleId),
-      ]
+    const bookmarkResponse = await databases.getDocument(
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || '',
+        process.env.NEXT_PUBLIC_APPWRITE_USER_ITEMS_COLLECTION || '',
+        userId
     );
-    
-    if (bookmarkResponse.documents.length > 0) {
-        return bookmarkResponse.documents; // Article is bookmarked
+
+    const bookmarksData = {
+        $id: bookmarkResponse.$id,
+        UserSavedArticles: bookmarkResponse.UserSavedArticles,
+    } as Bookmarks;
+
+    if (articleId !== '') {
+        if (bookmarksData.UserSavedArticles.includes(articleId)) {
+            return bookmarksData;
+        } else {
+            return null; // Article is not bookmarked
+        }
     } else {
-        return null; // Article is not bookmarked
+        return bookmarksData; // Return all bookmarks
     }
+    
+    
   } catch (error) {
     console.error(`Error retrieving topics collection: ${error}`);
     return null;

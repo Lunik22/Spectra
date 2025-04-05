@@ -45,7 +45,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchBar() {
   return (
-    <Box>
+    <Box sx={{ display: 'hidden', opacity: 0 }}>
       <Search>
         <SearchIconWrapper>
           <i className="fas fa-search"></i> {/* Replace with your search icon */}

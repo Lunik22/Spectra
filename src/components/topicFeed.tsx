@@ -4,7 +4,7 @@ import { Box, CircularProgress, Grow, Stack, Typography } from "@mui/material";
 import TopicBarXl from "./topicBarXl";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { getArticle, getAvailableAlignments } from "@/services/articleService";
+import { getArticles, getAvailableAlignments } from "@/services/articleService";
 import { usePathname } from "next/navigation";
 import { getTopic } from "@/services/topicService";
 import { Article } from "@/types";
@@ -46,7 +46,7 @@ export default function TopicFeed() {
     console.log(`Alignment ${alignment}`);
     console.log(`New Page ${nextPage}`);
 
-    const result = await getArticle(topicId, availableAlignments, alignment, 1, nextPage, timestamp);
+    const result = await getArticles(topicId, availableAlignments, alignment, 1, nextPage, timestamp);
     const newArticle = result && typeof result === 'object' && '$id' in result && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' in result && 'ArticlePayWall' in result && 'ArticleAuthors' in result && 'ArticlePreview' in result && 'ArticleTopics' in result && 'ArticleReliability' in result && 'ArticleType' in result && 'ArticleLanguage' in result
       ? (result as unknown as Article)
       : null;
@@ -95,7 +95,7 @@ export default function TopicFeed() {
       setAlignmentCounts(availableAlignments);
   
       // Load the first page of articles for the new alignment
-      const result = await getArticle(topicId, availableAlignments, newAlignment, 1, 0, timestamp);
+      const result = await getArticles(topicId, availableAlignments, newAlignment, 1, 0, timestamp);
       const newArticle = result && typeof result === 'object' && '$id' in result && 'ArticleTitle' in result && 'ArticleImage' in result && 'ArticleDate' in result && 'ArticleLink' in result && 'ArticleAlignment' in result && 'ArticlePayWall' in result && 'ArticleAuthors' in result && 'ArticlePreview' in result && 'ArticleTopics' in result && 'ArticleReliability' in result && 'ArticleType' in result && 'ArticleLanguage' in result
         ? (result as unknown as Article)
         : null;
@@ -110,6 +110,7 @@ export default function TopicFeed() {
     <Stack spacing={2} sx={{ paddingTop: "11rem" }}>
       <Box>
         <TopicBarXl
+          $id={topicId}
           topic={{ $id: topicId, TopicName: topicName, TopicCategory: "", TopicArticles: [] }}
           alignment={alignment}
           onArticleChange={(newAlignment) => handleAlignmentChange(newAlignment)}
@@ -125,7 +126,7 @@ export default function TopicFeed() {
               image={article.ArticleImage}
               date={article.ArticleDate}
               sourceLink={article.ArticleLink}
-              paywall={article.ArticlePaywall}
+              paywall={article.ArticlePayWall}
               authors={article.ArticleAuthors}
               preview={article.ArticlePreview}
               topics={article.ArticleTopics}

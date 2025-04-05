@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { defaultTheme, slovakiaTheme, worldTheme, economicsTheme, techTheme, sportTheme, cultureTheme, localTheme } from '../app/theme';
 import Link from 'next/link';
 import { getLoggedInUser } from '@/appwrite/authService';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface MenuProps {
   onNavigate?: (url: string) => void;
@@ -15,6 +15,7 @@ export default function Menu({ onNavigate }: MenuProps) {
   const theme = useTheme();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     async function checkAuth() {
@@ -25,6 +26,10 @@ export default function Menu({ onNavigate }: MenuProps) {
   }, []);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
+    if (pathname === url) {
+      e.preventDefault();
+      return;
+    }
     if (onNavigate) {
       e.preventDefault();
       onNavigate(url);

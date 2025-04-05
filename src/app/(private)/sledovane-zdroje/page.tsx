@@ -1,11 +1,11 @@
 "use client"
 
 import { Container, Fade } from '@mui/material';
-import Navbar from "../../../../../components/navbar";
-import Menu from "../../../../../components/menu";
-import TopicFeed from '@/components/topicFeed';
+import Navbar from "../../../components/navbar";
+import Menu from "../../../components/menu";
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import BookmarkFeed from '@/components/bookmarkFeed';
  
 export default function TopicPage() {
   const [fadeIn, setFadeIn] = useState(true);
@@ -23,7 +23,7 @@ export default function TopicPage() {
       <Container>
         <Navbar/>
         <Menu onNavigate={handleRouteChange}/>
-        <TopicFeed/>
+        <BookmarkFeed/>
       </Container>
     </Fade>
   );

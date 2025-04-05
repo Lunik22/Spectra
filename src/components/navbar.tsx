@@ -6,6 +6,7 @@ import SearchBar from './searchBar';
 import { getAvatarURL, getLoggedInUser } from '@/appwrite/authService';
 import { User } from '@/types';
 import ProfileDropdown from './profileDropdown';
+import { defaultTheme } from '@/app/theme';
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
@@ -56,16 +57,44 @@ export default function Navbar() {
                 <ProfileDropdown/>
               ) : (
                 <Button 
-                  variant="contained" 
-                  color="primary" 
-                  href="/autentifikacia/prihlasenie"
-                  sx={{ 
-                      borderRadius: '2rem',
-                      zIndex: 3,
-                      width: '10rem', 
-                      height: '2.5rem',
-
-                  }}>
+                variant="contained" 
+                color="primary" 
+                href='/autentifikacia/prihlasenie'
+                fullWidth
+                sx={{ 
+                    borderRadius: '2rem',
+                    zIndex: 3,
+                    width: '10rem', 
+                    height: '2.5rem',
+                    backdropFilter: 'blur(10px)', 
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundImage: `linear-gradient(to right,${defaultTheme.palette.primary.left}, ${defaultTheme.palette.primary.main}, ${defaultTheme.palette.primary.right})`,
+                        opacity: 0.8, 
+                        zIndex: -1,
+                        borderRadius: '30px',
+                        transition: '0.3s',
+                    },
+                    ':hover': {
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        opacity: 1, 
+                        zIndex: -1,
+                        borderRadius: '30px'
+                      }
+                    }
+                }}>
                     Prihlásiť sa
                 </Button>
               )}

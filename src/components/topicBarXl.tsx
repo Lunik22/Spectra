@@ -6,11 +6,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ToggleButton, ToggleButtonGroup, IconButton } from '@mui/material';
 import { Topic } from '@/types';
-import { usePathname } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useEffect, useState } from 'react';
+import { getLoggedInUser } from '@/appwrite/authService';
+import { getFollowedTopics, setFollowedTopics, undoFollowedTopics } from '@/services/followService';
 
 interface TopicBarProps {
+  $id: string;
   topic: Topic;
   alignment: '' | 'l' | 's' | 'k';
   onArticleChange: (alignment: '' | 'l' | 's' | 'k') => void;
@@ -27,10 +31,11 @@ const articleName = (count: number): string => {
   }
 }
 
-export default function TopicBarXl({ topic, alignment, onArticleChange, alignmentCounts }: TopicBarProps) {
+export default function TopicBarXl({ $id, topic, alignment, onArticleChange, alignmentCounts }: TopicBarProps) {
   const theme = useTheme();
-  const [currentAlignment, setCurrentAlignment] = React.useState(alignment);
-  const [isFollowing, setIsFollowing] = React.useState(false); // State to track follow status
+  const [currentAlignment, setCurrentAlignment] = useState(alignment);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [isFollowing, setIsFollowing] = useState(false); // State to track follow status
 
   const handleAlignment = async (event: React.MouseEvent<HTMLElement>, newAlignment: '' | 'l' | 's' | 'k') => {
     if (newAlignment !== null) {
@@ -39,9 +44,44 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
     }
   };
 
+  useEffect(() => {
+    getLoggedInUser().then(user => {
+      setUserId(user?.$id || null); // Get the user ID from the logged-in user
+    });
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      getFollowedTopics(userId, $id).then((response: unknown) => {
+        if (response) {
+          setIsFollowing(true);
+        } else {
+          setIsFollowing(false);
+        }
+      });
+    }
+  }, [userId, $id]); // Ensure this hook runs when `userId` or `$id` changes
+  
+
   const handleFollowChange = () => {
-    setIsFollowing(!isFollowing); // Toggle follow status
-    console.log(`Follow status for topic "${topic.TopicName}":`, !isFollowing);
+    if (!userId) {
+      redirect('/autentifikacia/prihlasenie');
+    } else {
+      if (!isFollowing) {
+        setFollowedTopics(userId, $id).then(() => {
+          console.log("Article bookmarked successfully!");
+        }).catch((error) => {
+          console.error("Error bookmarking article:", error);
+        });
+      } else {
+        undoFollowedTopics(userId, $id).then(() => {
+          console.log("Article unbookmarked successfully!");
+        }).catch((error) => {
+          console.error("Error unbookmarking article:", error);
+        });
+      }
+    }
+    setIsFollowing(!isFollowing);
   };
 
   React.useEffect(() => {
@@ -252,7 +292,7 @@ export default function TopicBarXl({ topic, alignment, onArticleChange, alignmen
             <IconButton
               onClick={handleFollowChange}
               sx={{
-                color: isFollowing ? theme.palette.primary.dark : theme.palette.text.primary,
+                color: theme.palette.text.primary,
                 transition: 'color 0.3s',
                 '&:hover': {
                   color: theme.palette.primary.main,

@@ -105,7 +105,6 @@ export default function ProfileDropdown() {
         }}
       >
         <MenuItem onClick={handleClose}>Môj profil: {user?.name}</MenuItem>
-        <MenuItem onClick={handleClose}>Uložené články</MenuItem>
         <MenuItem onClick={handleLogout} sx={{ color: cultureTheme.palette.primary.main }}>Odhlásiť sa</MenuItem>
       </Menu>
     </Box>

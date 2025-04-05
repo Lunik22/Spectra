@@ -12,14 +12,15 @@ import { sk } from 'date-fns/locale';
 import Link from 'next/link';
 import { ArticleCardXlProps } from '@/types';
 import { IconButton } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+/*import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';*/
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { getLoggedInUser } from '@/appwrite/authService';
-import { isArticleBookmarked, setBookmark, undoBookmark } from '@/services/bookmarkService';
+import { getBookmarks, setBookmark, undoBookmark } from '@/services/bookmarkService';
 import { redirect } from "next/navigation";
 import { useEffect, useState } from 'react';
+import { getFollowedSources } from '@/services/followService';
 
 
 
@@ -59,7 +60,7 @@ export default function ArticleCardXl({ $id, title, image, date, sourceLink, pay
 
   useEffect(() => {
     if (userId) {
-      isArticleBookmarked(userId, $id).then((response: unknown) => {
+      getBookmarks(userId, $id).then((response: unknown) => {
         if (response) {
           setIsBookmarked(true);
         } else {
@@ -75,6 +76,20 @@ export default function ArticleCardXl({ $id, title, image, date, sourceLink, pay
   }
 
   const source = sourceLink.split("/")[2] as keyof typeof sources;
+
+  useEffect(() => {
+    if (userId) {
+      getFollowedSources(userId, sources[source].name).then((response: unknown) => {
+        if (response) {
+          setIsFollowing(true);
+        } else {
+          setIsFollowing(false);
+        }
+      });
+    }
+  }, [userId, $id]); // Ensure this hook runs when `userId` or `$id` changes
+
+  
 
   if (!sources[source]) {
     console.error(`Source not found for link: ${sourceLink}`);
@@ -114,9 +129,26 @@ export default function ArticleCardXl({ $id, title, image, date, sourceLink, pay
     setExpanded(!expanded);
   };
 
-  const handleFollowChange = () => {
-    setIsFollowing(!isFollowing); // Toggle follow status
-  };
+  /*const handleFollowChange = () => {
+    if (!userId) {
+      redirect('/autentifikacia/prihlasenie');
+    } else {
+      if (!isFollowing) {
+        setFollowedSources(userId, sources[source].name).then(() => {
+          console.log("Article bookmarked successfully!");
+        }).catch((error) => {
+          console.error("Error bookmarking article:", error);
+        });
+      } else {
+        undoFollowedSources(userId, sources[source].name).then(() => {
+          console.log("Article unbookmarked successfully!");
+        }).catch((error) => {
+          console.error("Error unbookmarking article:", error);
+        });
+      }
+    }
+    setIsFollowing(!isFollowing);
+  };*/
 
   const handleBookmarkChange = () => {
     if (!userId) {
@@ -220,53 +252,6 @@ export default function ArticleCardXl({ $id, title, image, date, sourceLink, pay
                   >
                     {sources[source]["name"]}
                   </Typography>
-                  <Box
-                    sx={{
-                      position: 'relative',
-                      display: 'inline-block',
-                      '&:hover .tooltip': {
-                        visibility: 'visible',
-                        opacity: 1,
-                      },
-                    }}
-                  >
-                    <IconButton
-                      onClick={handleFollowChange}
-                      sx={{
-                        color: theme.palette.text.primary,
-                        opacity: expanded ? 1 : 0,
-                        transform: expanded ? 'scale(1)' : 'scale(0.8)',
-                        transition: 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out, color 0.3s ease-in-out',
-                        '&:hover': {
-                          color: theme.palette.primary.main,
-                        },
-                      }}
-                    >
-                      {isFollowing ? <CheckCircleIcon /> : <AddCircleOutlineIcon />}
-                    </IconButton>
-                    <Box
-                      sx={{
-                        visibility: 'hidden',
-                        backgroundColor: theme.palette.primary.darker,
-                        color: theme.palette.text.primary,
-                        textAlign: 'center',
-                        borderRadius: '30px',
-                        px: '1rem',
-                        py: '0.5rem',
-                        position: 'absolute',
-                        zIndex: 1,
-                        bottom: '125%',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        whiteSpace: 'nowrap',
-                        opacity: 0,
-                        transition: 'opacity 0.3s, visibility 0.3s',
-                      }}
-                      className="tooltip"
-                    >
-                      {isFollowing ? 'Vymazať sledovanie' : 'Sledovať zdroj'}
-                    </Box>
-                  </Box>
                   <Box
                     sx={{
                       position: 'relative',

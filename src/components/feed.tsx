@@ -7,7 +7,7 @@ import ArticleCardLg from "./articleCardLg";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { getTopics } from "@/services/topicService";
-import { getArticle } from "@/services/articleService";
+import { getArticles } from "@/services/articleService";
 import { usePathname } from "next/navigation";
 
 const subdomainToCategoryMap: { [key: string]: string } = {
@@ -65,7 +65,7 @@ export default function Feed() {
             if (shownArticles.includes(articleId)) {
               const alignmentCount = (newTopicsWArticles.alignmentsCount as { [key: string]: { l: number; s: number; k: number; } })[articleId];
               if (alignmentCount && Object.values(alignmentCount as { [key: string]: number }).reduce((a, b) => a + b, 0) >= 2) {
-                const newArticle = await getArticle(
+                const newArticle = await getArticles(
                   newTopicsWArticles.topics.find(topic => topic.$id === articleId)?.$id ?? '',
                   alignmentCount,
                   (newTopicsWArticles.articles as { [key: string]: { ArticleAlignment?: 'l' | 's' | 'k' } })[articleId]?.ArticleAlignment,

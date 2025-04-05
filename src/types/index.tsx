@@ -14,7 +14,7 @@ export interface Article {
     ArticleDate: string;
     ArticleLink: string;
     ArticleAlignment: string;
-    ArticlePaywall: boolean;
+    ArticlePayWall: boolean;
     ArticleAuthors: string[];
     ArticlePreview: string;
     ArticleTopics: string[];
@@ -50,10 +50,42 @@ export interface ArticleCardXlProps {
     language: string;
 }
 
-export interface UserItems {
+export interface Bookmarks {
     $id: string;
     UserSavedArticles: string[];
+}
+
+export interface FollowedTopics {
+    $id: string;
     UserFollowedTopics: string[];
+}
+
+export interface FollowedSources {
+    $id: string;
     UserFollowedSources: string[];
 }
+
+export interface Source {
+    $id: string;
+    SourceName: string;
+    SourceLinks: string[];
+    SourceAltImg: string;
+    SourceLogo: string;
+    SourceAlignment: string;
+}
  
+export interface FollowedTopic {
+    $id: string;
+    TopicName: string;
+    TopicCategories: string;
+    TopicArticles: string[];
+}
+
+export interface FollowedSource {
+    $id: string;
+    SourceName: string;
+    SourceLinks: string[];
+    SourceAltImg: string;
+    SourceLogo: string;
+    SourceAlignment: string;
+}

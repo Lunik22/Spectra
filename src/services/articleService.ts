@@ -1,5 +1,6 @@
 "use server";
 
+import { Source } from "@/types";
 import { Client, Databases, Query } from "appwrite"; // Adjust the import based on your project structure
 
 const client = new Client();
@@ -9,6 +10,33 @@ client
 
 const databases = new Databases(client);
 
+export async function getArticleSources(){
+  try {
+    const response = await databases.listDocuments(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || '',
+      process.env.NEXT_PUBLIC_APPWRITE_ARTICLE_SOURCES_COLLECTION || '',
+    );
+
+    const sourcesData = response.documents?.map((doc) => ({
+      $id: doc.$id,
+      SourceName: doc.ArticleSourceName,
+      SourceLink: doc.ArticleSourceLink,
+      SourceAltImg: doc.ArticleSourceAltImg,
+      SourceImg: doc.ArticleSourceImg,
+      SourceAlignment: doc.ArticleSourceAlignment,
+    })) as unknown as Source[] || [];
+
+    if (response && response.documents.length > 0) {
+      return sourcesData;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error retrieving sources: ${error}`);
+    return null;
+  }
+}
+
 export async function getAvailableAlignments(topic: string, dateLimit: number = 86400) {
   const alignments: ('l' | 's' | 'k')[] = ['l', 's', 'k'];
   const availableAlignments: { 'l': number, 's': number, 'k': number } = { 'l': 0, 's': 0, 'k': 0 };
@@ -17,8 +45,8 @@ export async function getAvailableAlignments(topic: string, dateLimit: number = 
   console.log(`Timestamp: ${timestamp}`);
   for (const alignment of alignments) {
     const response = await databases.listDocuments(
-      '66e992ad00337f2887d0',
-      '66e992d00033deaab869',
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || '',
+      process.env.NEXT_PUBLIC_APPWRITE_ARTICLES_COLLECTION || '',
       [
         Query.contains('ArticleTopics', [topic]),
         Query.contains('ArticleAlignment', [alignment]),
@@ -52,7 +80,7 @@ export async function getRandomAlignment(availableAlignments: { 'l': number, 's'
   return validAlignments[Math.floor(Math.random() * validAlignments.length)];
 }
 
-export async function getArticle(topic: string, availableAlignments: { 'l': number, 's': number, 'k': number }, alignment: 'l' | 's' | 'k' | '' = '', limit: number = 1, offset: number = 0, dateLimit: number = 86400) {
+export async function getArticles(topic: string, availableAlignments: { 'l': number, 's': number, 'k': number }, alignment: 'l' | 's' | 'k' | '' = '', limit: number = 1, offset: number = 0, dateLimit: number = 86400) {
   const alignments = [];
   const timestamp = Math.floor(Date.now() / 1000);
   for (const alignment of Object.keys(availableAlignments) as Array<'l' | 's' | 'k'>) {
@@ -60,9 +88,7 @@ export async function getArticle(topic: string, availableAlignments: { 'l': numb
       alignments.push(alignment);
     }
   }
-
   let alignmentLocal: 'l' | 's' | 'k' ;
-
   if (alignment !== '') {
     alignmentLocal = alignment as 'l' | 's' | 'k';
   } else {
@@ -74,13 +100,12 @@ export async function getArticle(topic: string, availableAlignments: { 'l': numb
       alignmentLocal = alignments[Math.floor(Math.random() * alignments.length)] as 'l' | 's' | 'k';
     }
   }
-  
   try {
   let response;
   if(alignment == ''){
     response = await databases.listDocuments(
-      '66e992ad00337f2887d0',
-      '66e992d00033deaab869',
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || '',
+      process.env.NEXT_PUBLIC_APPWRITE_ARTICLES_COLLECTION || '',
       [
         Query.contains('ArticleTopics', [topic]),
         Query.limit(limit),
@@ -91,8 +116,8 @@ export async function getArticle(topic: string, availableAlignments: { 'l': numb
     );
   }else{
     response = await databases.listDocuments(
-      '66e992ad00337f2887d0',
-      '66e992d00033deaab869',
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || '',
+      process.env.NEXT_PUBLIC_APPWRITE_ARTICLES_COLLECTION || '',
       [
         Query.contains('ArticleTopics', [topic]),
         Query.limit(limit),
@@ -112,5 +137,23 @@ export async function getArticle(topic: string, availableAlignments: { 'l': numb
   } catch (error) {
     console.error(`Error retrieving newest article: ${error}`);
     return '';
+  }
+}
+
+export async function getArticle(articleId: string) {
+  try {
+    const response = await databases.getDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || '',
+      process.env.NEXT_PUBLIC_APPWRITE_ARTICLES_COLLECTION || '',
+      articleId
+    );
+    if (response) {
+      return response;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error retrieving article by ID: ${error}`);
+    return null;
   }
 }

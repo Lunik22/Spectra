@@ -2,7 +2,7 @@
 
 import { Client, Databases, Query } from "appwrite"; // Adjust the import based on your project structure
 import { Topic } from "@/types";
-import { getAvailableAlignments, getArticle, getRandomAlignment } from "./articleService";
+import { getAvailableAlignments, getArticles, getRandomAlignment } from "./articleService";
 
 const client = new Client();
 client
@@ -71,7 +71,7 @@ export async function getTopics(offset = 0, category: string) {
         alignments[topic.$id] = randomAlignment;
 
         if (availableAlignmentsResponse) {
-          const articleResponse = await getArticle(topic.$id, availableAlignmentsResponse, randomAlignment);
+          const articleResponse = await getArticles(topic.$id, availableAlignmentsResponse, randomAlignment);
           if (articleResponse) {
             articlesData[topic.$id] = articleResponse;
           }
