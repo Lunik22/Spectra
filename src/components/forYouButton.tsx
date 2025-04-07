@@ -30,6 +30,7 @@ export default function ForYouButton({ name, category = '', link }: { name: stri
     <Box sx={{
       display: 'flex',
       alignItems: 'center',
+      width: 'calc(100% - 30px)',
       gap: '2rem',
       py: '1rem',
       px: '2rem',
@@ -38,7 +39,7 @@ export default function ForYouButton({ name, category = '', link }: { name: stri
       borderRadius: '30px',
       backdropFilter: 'blur(10px)', 
       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      transform: 'translateX(15px)',
+      transform: 'translateX(30px)',
       position: 'relative',
       '&::before': {
           content: '""',

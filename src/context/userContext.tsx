@@ -3,14 +3,14 @@ import { getLoggedInUser, getAvatarURL } from '@/appwrite/authService';
 import Cookies from 'js-cookie';
 
 type UserContextType = {
-  user: { name: string; email: string } | null;
+  user: { $id: string; name: string; email: string } | null;
   avatar: string | null;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ $id: string; name: string; email: string } | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,10 +31,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (loggedInUser) {
             const avatarResponse = await getAvatarURL();
             if (avatarResponse) {
-              const avatarBase64 = Buffer.from(avatarResponse).toString('base64');
-              const avatarData = `data:image/png;base64,${avatarBase64}`;
-              setAvatar(avatarData);
-              Cookies.set('avatar', avatarData, { expires: 7 });
+              const base64Avatar = btoa(String.fromCharCode(...new Uint8Array(avatarResponse)));
+              setAvatar(base64Avatar);
+              Cookies.set('avatar', base64Avatar, { expires: 7 });
             } else {
               setAvatar(null);
             }

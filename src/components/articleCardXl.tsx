@@ -230,7 +230,7 @@ export default function ArticleCardXl({ $id, title, image, date, sourceLink, pay
           >
             <Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', width: '100%' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', width: '70%' }}>
                   <CardMedia
                     component="img"
                     sx={{ width: '2rem', marginRight: '1rem', borderRadius: '25%' }}
@@ -541,7 +541,7 @@ export default function ArticleCardXl({ $id, title, image, date, sourceLink, pay
                   color: appliedTheme.palette.text.primary,
                   fontSize: expanded ? '2rem' : '1.75rem',
                   fontWeight: '700',
-                  padding: '1rem 0 1rem 0',
+                  padding: expanded ? '1rem 0 1rem 0' : '0 0 1rem 0',
                   WebkitTapHighlightColor: appliedTheme.palette.primary.main,
                   transition: '0.3s',
                   ':hover': {

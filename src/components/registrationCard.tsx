@@ -85,15 +85,20 @@ export default function RegistrationCard() {
       return;
     }
 
-    const formDataObj = new FormData();
-    formDataObj.append('name', formData.name);
-    formDataObj.append('email', formData.email);
-    formDataObj.append('password', formData.password);
-    if (profilePicture) {
-      formDataObj.append('profilePicture', profilePicture);
+    try {
+      const formDataObj = new FormData();
+      formDataObj.append('name', formData.name);
+      formDataObj.append('email', formData.email);
+      formDataObj.append('password', formData.password);
+      if (profilePicture) {
+        formDataObj.append('profilePicture', profilePicture);
+      }
+      await signUpWithEmail(formDataObj);
+      router.push('/autentifikacia/prihlasenie');
+    } catch (error) {
+      setError(error instanceof Error ? error.message : String(error));
+      setOpen(true);
     }
-    await signUpWithEmail(formDataObj);
-    router.push('/autentifikacia/prihlasenie');
   };
 
   const handleClose = () => {

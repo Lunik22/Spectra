@@ -1,10 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Menu, MenuItem } from '@mui/material';
+import { alpha, Box, Button, Menu, MenuItem, Typography } from '@mui/material';
 import { getAvatarURL, getLoggedInUser, signOut } from '@/appwrite/authService';
 import { cultureTheme } from '@/app/theme';
 import { useTheme } from '@mui/material';
 import { User } from '@/types';
+import { redirect } from 'next/navigation';
 
 export default function ProfileDropdown() {
   const theme = useTheme();
@@ -46,6 +47,18 @@ export default function ProfileDropdown() {
     }
   };
 
+  const handleArticles = async () => {
+    redirect('/ulozene-clanky');
+  }
+
+  const handleTopics = async () => {
+    redirect('/sledovane-temy');
+  }
+
+  const handleProfile = async () => {
+    redirect('/moj-profil');
+  }
+
   return (
     <Box sx={{ transform: 'translatex(-30px)',}}>
       <Button
@@ -77,7 +90,7 @@ export default function ProfileDropdown() {
         }}
         sx={{
           '& .MuiPaper-root': {
-            backgroundColor: theme.palette.background.paper,
+            backgroundColor: alpha(theme.palette.primary.main, 0.5),
             color: theme.palette.text.primary,
             borderRadius: '30px',
             padding: '0.5rem',
@@ -90,7 +103,7 @@ export default function ProfileDropdown() {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundImage: theme.palette.background.paper,
+                backgroundImage: alpha(theme.palette.primary.main, 0.5),
                 opacity: 0.8, 
                 zIndex: -1,
                 borderRadius: '30px'
@@ -104,8 +117,10 @@ export default function ProfileDropdown() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Môj profil: {user?.name}</MenuItem>
-        <MenuItem onClick={handleLogout} sx={{ color: cultureTheme.palette.primary.main }}>Odhlásiť sa</MenuItem>
+        <MenuItem onClick={handleProfile}>Môj profil: {user?.name}</MenuItem>
+        <MenuItem onClick={handleArticles}>Uložené články</MenuItem>
+        <MenuItem onClick={handleTopics}>Sledované témy</MenuItem>
+        <MenuItem onClick={handleLogout}><Typography sx={{ transition: 'color 0.3s', ':hover': { color: cultureTheme.palette.primary.main } }}>Odhlásiť sa</Typography></MenuItem>
       </Menu>
     </Box>
   );

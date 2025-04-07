@@ -1,11 +1,10 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AppBar, Box, Toolbar, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { defaultTheme, slovakiaTheme, worldTheme, economicsTheme, techTheme, sportTheme, cultureTheme, localTheme } from '../app/theme';
 import Link from 'next/link';
-import { getLoggedInUser } from '@/appwrite/authService';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 interface MenuProps {
   onNavigate?: (url: string) => void;
@@ -13,17 +12,7 @@ interface MenuProps {
 
 export default function Menu({ onNavigate }: MenuProps) {
   const theme = useTheme();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-  const router = useRouter();
   const pathname = usePathname();
-
-  useEffect(() => {
-    async function checkAuth() {
-      const user = await getLoggedInUser();
-      setIsLoggedIn(!!user);
-    }
-    checkAuth();
-  }, []);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
     if (pathname === url) {
@@ -33,15 +22,6 @@ export default function Menu({ onNavigate }: MenuProps) {
     if (onNavigate) {
       e.preventDefault();
       onNavigate(url);
-    }
-  };
-
-  const handlePreTebaClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
-    if (!isLoggedIn) {
-      e.preventDefault();
-      router.push('/autentifikacia/prihlasenie');
-    } else {
-      handleLinkClick(e, url);
     }
   };
 
@@ -89,23 +69,6 @@ export default function Menu({ onNavigate }: MenuProps) {
                 }
               }}>
               Hlavne Správy
-            </Typography>
-          </Link>
-          <Link href="/pre-teba" passHref onClick={(e) => handlePreTebaClick(e, "/pre-teba")}>
-            <Typography
-              variant="h2"
-              sx={{
-                color: theme.palette.text.primary,
-                transition: 'color 0.3s',
-                display: 'flex',
-                alignItems: 'center',
-                height: '100%',
-                '&:hover': {
-                  color: defaultTheme.palette.primary.main,
-                  transition: 'color 0.3s',
-                }
-              }}>
-              Pre Teba
             </Typography>
           </Link>
           <Link href="/kategoria/slovensko" passHref onClick={(e) => handleLinkClick(e, "/kategoria/slovensko")}>

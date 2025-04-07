@@ -102,24 +102,34 @@ export async function getLoggedInUser() {
       return null; // No session client means user is not logged in
     }
     const { account } = sessionClient;
-    return await account.get();
+    const user = await account.get();
+    return {
+      $id: user.$id,
+      name: user.name,
+      email: user.email,
+    }; // Return only plain object
   } catch (error) {
     return null;
   }
 }
 
 export async function getAvatarURL() {
+  try {
     const sessionClient = await createAdminClient();
     const userId = (await getLoggedInUser())?.$id;
-    if (!sessionClient) {
-        return null; // No session client means user is not logged in
+    if (!sessionClient || !userId) {
+      return null; // No session client or user ID means no avatar
     }
     const storage = new Storage(sessionClient.client);
-    const avatar = storage.getFileDownload(
+    const avatar = await storage.getFileView(
       process.env.NEXT_PUBLIC_APPWRITE_USERS_BUCKET_ID || '',
-      userId || '', // Use the logged-in user's ID
-    )
-    return await avatar;
+      userId
+    );
+    return avatar; // Return only the URL as a string
+  } catch (error) {
+    console.error("Error fetching avatar URL:", error);
+    return null;
+  }
 }
 
 export async function signOut() {
