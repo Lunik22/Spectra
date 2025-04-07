@@ -76,11 +76,7 @@ export default function LoginCard() {
       setAuthStatus(true);
       router.push('/');
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message || 'Login failed');
-      } else {
-        setError('Login failed');
-      }
+      setError('Prihlásenie zlyhalo. Skontrolujte svoje údaje a skúste to znova.');
       setOpen(true); // Open the popup on error
     }
   };

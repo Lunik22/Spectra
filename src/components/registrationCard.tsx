@@ -96,7 +96,7 @@ export default function RegistrationCard() {
       await signUpWithEmail(formDataObj);
       router.push('/autentifikacia/prihlasenie');
     } catch (error) {
-      setError(error instanceof Error ? error.message : String(error));
+      setError('Registrácia zlyhala. Skontrolujte svoje údaje.');
       setOpen(true);
     }
   };
